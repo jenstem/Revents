@@ -5,16 +5,18 @@ import { AppEvent } from '../../../app/types/event';
 
 type Props = {
     event:  AppEvent
+    selectEvent: (event: AppEvent) => void;
 }
 // pass Props from event.ts to EventListItem
-export default function EventListItem({event}: Props) {
+export default function EventListItem({ event, selectEvent }: Props) {
     return (
         <SegmentGroup>
             <Segment>
                 <ItemGroup>
                     <Item>
                         {/* don't need to specify public folder, vite takes care of automatically */}
-                        <Item.Image size='tiny' circular src={event.hostPhotoURL} />
+                        {/* use || "/user.png" to specify a default image if there is no image */}
+                        <Item.Image size='tiny' circular src={event.hostPhotoURL || "/user.png"} />
                         <Item.Content>
                             <Item.Header>{event.title}</Item.Header>
                             <Item.Description>
@@ -43,7 +45,7 @@ export default function EventListItem({event}: Props) {
             {/* clearing will remove any float styling from the Segment element because we want to float the button to the right */}
             <Segment clearing>
                 <span>{event.description}</span>
-                <Button color='teal' floated='right' content='View' />
+                <Button color='teal' floated='right' content='View' onClick={() => selectEvent(event)}/>
             </Segment>
         </SegmentGroup>
     )

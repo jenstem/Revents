@@ -5,6 +5,8 @@ import { AppEvent } from '../../../app/types/event';
 // set Props to an array of AppEvent
 type Props = {
     events: AppEvent[]
+    selectEvent: (event: AppEvent) => void
+
 }
 
 // add any to props - to treat TypeScript like JavaScript
@@ -12,7 +14,7 @@ type Props = {
 // export default function EventList(props: any) {
 
     // change props: any to {events}: Props
-    export default function EventList({events}: Props) {
+    export default function EventList({events, selectEvent}: Props) {
     return (
         <>
         {/* map/loop over EventListItem */}
@@ -25,7 +27,7 @@ type Props = {
         {/* event is now part of AppEvent and you can remove "any" from event */}
         {events.map((event) => (
             // need to give event a unique key
-            <EventListItem key={event.id} event={event} />
+            <EventListItem key={event.id} event={event} selectEvent={selectEvent}/>
         ))}
 
         </>
