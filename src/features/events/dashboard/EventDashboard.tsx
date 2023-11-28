@@ -43,6 +43,11 @@ export default function EventDashboard({ formOpen, setFormOpen, selectEvent, sel
         setFormOpen(false);
     }
 
+    // this will return an array of everything but the event ID
+    function deleteEvent(eventID: string) {
+            setEvents(events.filter(evt => evt.id !== eventID));
+    }
+
 
     return (
         <Grid>
@@ -50,7 +55,7 @@ export default function EventDashboard({ formOpen, setFormOpen, selectEvent, sel
             <Grid.Column width={10}>
                 {/* passing events down to EventList
                 need to pass "props: any" in EventList.tsx*/}
-                <EventList events={events} selectEvent={selectEvent} />
+                <EventList events={events} selectEvent={selectEvent} deleteEvent={deleteEvent}/>
             </Grid.Column>
             <Grid.Column width={6}>
                 {/* if formOpen is set to true in App.tsx, then anything after the &&
