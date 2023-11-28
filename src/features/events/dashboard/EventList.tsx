@@ -5,8 +5,9 @@ import { AppEvent } from '../../../app/types/event';
 // set Props to an array of AppEvent
 type Props = {
     events: AppEvent[]
-    selectEvent: (event: AppEvent) => void
-    deleteEvent: (eventId: string) => void
+    // do not need because we're using a router
+    // selectEvent: (event: AppEvent) => void
+    // deleteEvent: (eventId: string) => void
 }
 
 // add any to props - to treat TypeScript like JavaScript
@@ -14,7 +15,9 @@ type Props = {
 // export default function EventList(props: any) {
 
     // change props: any to {events}: Props
-    export default function EventList({events, selectEvent, deleteEvent}: Props) {
+    // revising props because we are using a router
+    // export default function EventList({events, selectEvent, deleteEvent}: Props) {
+    export default function EventList({events}: Props) {
     return (
         <>
         {/* map/loop over EventListItem */}
@@ -30,8 +33,8 @@ type Props = {
             <EventListItem
                 key={event.id}
                 event={event}
-                selectEvent={selectEvent}
-                deleteEvent={deleteEvent}
+                // selectEvent={selectEvent}
+                // deleteEvent={deleteEvent}
                 />
         ))}
 

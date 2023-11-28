@@ -1,22 +1,27 @@
 import { Button, Form, Header, Segment } from "semantic-ui-react";
 import { useEffect, useState } from "react";
-import { AppEvent } from "../../../app/types/event";
+// import { AppEvent } from "../../../app/types/event";
 import { ChangeEvent } from "react";
-import { createId } from "@paralleldrive/cuid2";
+// import { createId } from "@paralleldrive/cuid2";
 
-type Props = {
-    setFormOpen: (value: boolean) => void;
-    addEvent: (event: AppEvent) => void;
-    // need to specify if it's an AppEvent or null, otherwise you'll get errors with AppEvent in code
-    selectedEvent: AppEvent | null
-    // add updateEvent to Props
-    updateEvent: (event: AppEvent) => void;
-}
+// do NOT need when using router
+// type Props = {
+//     setFormOpen: (value: boolean) => void;
+//     addEvent: (event: AppEvent) => void;
+//     // need to specify if it's an AppEvent or null, otherwise you'll get errors with AppEvent in code
+//     selectedEvent: AppEvent | null
+//     // add updateEvent to Props
+//     updateEvent: (event: AppEvent) => void;
+// }
 // add updateEvent to Props
-export default function EventForm({ setFormOpen, addEvent, selectedEvent, updateEvent }: Props) {
+// remove props when using router
+// export default function EventForm({ setFormOpen, addEvent, selectedEvent, updateEvent }: Props) {
+    export default function EventForm() {
     // create an object we can pass into our useState
     // ?? = if selected event is null use what's inside this const
-    const initialValues = selectedEvent ?? {
+    // do NOT need selectedEvent when using router
+    // const initialValues = selectedEvent ?? {
+        const initialValues = {
         title: '',
         category: '',
         description: '',
@@ -31,13 +36,15 @@ export default function EventForm({ setFormOpen, addEvent, selectedEvent, update
 
     // what will happen when we submit our form
     function onSubmit() {
+        console.log(values);
+        // remove any props you're no longer using when using router
         // check to see if there's anything inside selectedEvent
         // if we do have a selectedEvent then we want to update the event
-        selectedEvent
-            ? updateEvent({...selectedEvent, ...values})
-            : addEvent({...values, id: createId(), hostedBy: 'bob', attendees: [], hostPhotoURL: ''});
-        // after we submit our info into Create Event form, we want to close the form
-        setFormOpen(false);
+        // selectedEvent
+        //     ? updateEvent({...selectedEvent, ...values})
+        //     : addEvent({...values, id: createId(), hostedBy: 'bob', attendees: [], hostPhotoURL: ''});
+        // // after we submit our info into Create Event form, we want to close the form
+        // setFormOpen(false);
     }
 
     function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
@@ -50,7 +57,9 @@ export default function EventForm({ setFormOpen, addEvent, selectedEvent, update
     return (
         <Segment clearing>
             {/* : = or */}
-            <Header content={selectedEvent ? 'Update Event' : 'Create Event'} />
+            {/* remove props you aren't using with router */}
+            {/* <Header content={selectedEvent ? 'Update Event' : 'Create Event'} /> */}
+            <Header content={'Create Event'} />
             <Form onSubmit={onSubmit}>
                 <Form.Field>
                     <input
@@ -99,7 +108,9 @@ export default function EventForm({ setFormOpen, addEvent, selectedEvent, update
                 <Button type='submit' floated='right' positive content='Submit' />
                 {/* the onClick is set to false because we want to close the form
                     or rather have the form disappear when we click the cancel button */}
-                <Button onClick={() => setFormOpen(false)} type='button' floated='right' content='Cancel' />
+                    {/* remove onClick when using router */}
+                {/* <Button onClick={() => setFormOpen(false)} type='button' floated='right' content='Cancel' /> */}
+                <Button type='button' floated='right' content='Cancel' />
             </Form>
         </Segment>
     )

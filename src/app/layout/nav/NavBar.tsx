@@ -3,11 +3,13 @@ import { Button, Container, Menu, MenuItem } from "semantic-ui-react";
 // add a type to store the Props
 // doesn't do anything except set the value to true or false
 // that's why we put void in the function
-type Props = {
-    setFormOpen: (value: boolean) => void;
-}
-
-export default function NavBar({setFormOpen}: Props) {
+// DO NOT NEED PROPS IF USING ROUTER!!!!
+// type Props = {
+//     setFormOpen: (value: boolean) => void;
+// }
+// REMOVE PROPS here too if using router
+// export default function NavBar({setFormOpen}: Props) {
+    export default function NavBar() {
     return (
         <Menu inverted={true} fixed="top">
             <Container>
@@ -28,7 +30,8 @@ export default function NavBar({setFormOpen}: Props) {
                         // that's why we pass it through the onClick
                         // and put an empty () => {} then it will wait till clicked
                         // this means you won't see the Create Event form until the button is clicked
-                        onClick={() => setFormOpen(true)}
+                        // DO NOT NEED ONCLICK when using router - will use button as a link instead of as an onClick event
+                        // onClick={() => setFormOpen(true)}
                         floated='right'
                         positive={true}
                         inverted={true}

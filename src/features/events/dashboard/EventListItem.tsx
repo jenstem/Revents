@@ -5,11 +5,14 @@ import { AppEvent } from '../../../app/types/event';
 
 type Props = {
     event:  AppEvent
-    selectEvent: (event: AppEvent) => void;
-    deleteEvent: (eventId: string) => void;
+    // do not need when using router
+    // selectEvent: (event: AppEvent) => void;
+    // deleteEvent: (eventId: string) => void;
 }
 // pass Props from event.ts to EventListItem
-export default function EventListItem({ event, selectEvent, deleteEvent }: Props) {
+// revising when using router
+// export default function EventListItem({ event, selectEvent, deleteEvent }: Props) {
+    export default function EventListItem({ event }: Props) {
     return (
         <SegmentGroup>
             <Segment>
@@ -46,8 +49,11 @@ export default function EventListItem({ event, selectEvent, deleteEvent }: Props
             {/* clearing will remove any float styling from the Segment element because we want to float the button to the right */}
             <Segment clearing>
                 <span>{event.description}</span>
-                <Button color='red' floated='right' content='Delete' onClick={() => deleteEvent(event.id)}/>
-                <Button color='teal' floated='right' content='View' onClick={() => selectEvent(event)}/>
+                {/* get ride of click events when using router */}
+                {/* <Button color='red' floated='right' content='Delete' onClick={() => deleteEvent(event.id)}/>
+                <Button color='teal' floated='right' content='View' onClick={() => selectEvent(event)}/> */}
+                <Button color='red' floated='right' content='Delete' />
+                <Button color='teal' floated='right' content='View' />
             </Segment>
         </SegmentGroup>
     )
