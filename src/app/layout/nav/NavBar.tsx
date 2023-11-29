@@ -1,4 +1,5 @@
 import { Button, Container, Menu, MenuItem } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 
 // add a type to store the Props
 // doesn't do anything except set the value to true or false
@@ -13,13 +14,13 @@ import { Button, Container, Menu, MenuItem } from "semantic-ui-react";
     return (
         <Menu inverted={true} fixed="top">
             <Container>
-
-                <MenuItem header>
+{/* to specifies where you want to route to, / = home page */}
+                <MenuItem header as={NavLink} to='/'>
                     <img src="/logo.png" alt="logo" />
                     Re-vents
                 </MenuItem>
 
-                <MenuItem name='Events' />
+                <MenuItem name='Events' as={NavLink} to='/events'/>
 
                 <MenuItem>
                     <Button
@@ -32,6 +33,8 @@ import { Button, Container, Menu, MenuItem } from "semantic-ui-react";
                         // this means you won't see the Create Event form until the button is clicked
                         // DO NOT NEED ONCLICK when using router - will use button as a link instead of as an onClick event
                         // onClick={() => setFormOpen(true)}
+                        as={NavLink}
+                        to='/createEvent'
                         floated='right'
                         positive={true}
                         inverted={true}
