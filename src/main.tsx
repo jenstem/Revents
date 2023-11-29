@@ -5,9 +5,14 @@ import ReactDOM from 'react-dom/client'
 import './app/layout/styles.css'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './app/router/Routes.tsx'
+import { Provider } from 'react-redux'
+import { store } from './app/store/store.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+      <Provider store={store}>
+      <RouterProvider router={router} />
+      </Provider>
 
     {/* when not using a router, we can just render the App component here
     <App /> */}
@@ -15,7 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     {/* when using a router, we can render the router here using RouterProvider
     and letting it know we are using const router by typing in
     router={router} */}
-    <RouterProvider router={router} />
+    {/* <RouterProvider router={router} /> */}
 
   </React.StrictMode>,
 )
