@@ -1,5 +1,7 @@
 import { Button, Container, Menu, MenuItem } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
+import SignedOutButtons from "./SignedOutButtons";
+import SignedInMenu from "./SignedInMenu";
 
 // add a type to store the Props
 // doesn't do anything except set the value to true or false
@@ -41,10 +43,7 @@ import { NavLink } from "react-router-dom";
                         content="Create Event" />
                 </MenuItem>
 
-                <MenuItem position='right'>
-                    <Button basic inverted content="Login" />
-                    <Button basic inverted content="Register" style={{marginLeft: '0.5rem'}} />
-                </MenuItem>
+                <SignedInMenu />
 
             </Container>
         </Menu>
