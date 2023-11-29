@@ -2,6 +2,7 @@ import { Button, Icon, Item, ItemGroup, List, Segment, SegmentGroup } from "sema
 import EventListAttendee from "./EventListAttendee";
 // import AppEvent from event.ts
 import { AppEvent } from '../../../app/types/event';
+import { Link } from "react-router-dom";
 
 type Props = {
     event:  AppEvent
@@ -53,7 +54,7 @@ type Props = {
                 {/* <Button color='red' floated='right' content='Delete' onClick={() => deleteEvent(event.id)}/>
                 <Button color='teal' floated='right' content='View' onClick={() => selectEvent(event)}/> */}
                 <Button color='red' floated='right' content='Delete' />
-                <Button color='teal' floated='right' content='View' />
+                <Button as={Link} to={`/events/${event.id}`} color='teal' floated='right' content='View' />
             </Segment>
         </SegmentGroup>
     )

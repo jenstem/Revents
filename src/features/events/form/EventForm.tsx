@@ -1,8 +1,10 @@
 import { Button, Form, Header, Segment } from "semantic-ui-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
+import { Link } from "react-router-dom";
+
 // import { AppEvent } from "../../../app/types/event";
-import { ChangeEvent } from "react";
 // import { createId } from "@paralleldrive/cuid2";
+
 
 // do NOT need when using router
 // type Props = {
@@ -110,7 +112,7 @@ import { ChangeEvent } from "react";
                     or rather have the form disappear when we click the cancel button */}
                     {/* remove onClick when using router */}
                 {/* <Button onClick={() => setFormOpen(false)} type='button' floated='right' content='Cancel' /> */}
-                <Button type='button' floated='right' content='Cancel' />
+                <Button as={Link} to='/events' type='button' floated='right' content='Cancel' />
             </Form>
         </Segment>
     )
