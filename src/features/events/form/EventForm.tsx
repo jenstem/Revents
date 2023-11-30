@@ -1,7 +1,9 @@
 import { Button, Form, Header, Segment } from "semantic-ui-react";
 import { useEffect, useState, ChangeEvent } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
+import { createEvent, updateEvent } from "../eventSlice";
+import { createId } from "@paralleldrive/cuid2";
 
 
 // import { AppEvent } from "../../../app/types/event";
@@ -22,8 +24,12 @@ import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 // export default function EventForm({ setFormOpen, addEvent, selectedEvent, updateEvent }: Props) {
     export default function EventForm() {
     // add useParams hook
-    const { id } = useParams();
+    // need to change const { id } = use Params() to let { id } = useParams()
+    // we need to change the id to let because we'll be updating the id
+    let { id } = useParams();
     const event = useAppSelector(state => state.events.events.find(e => e.id === id));
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     // create an object we can pass into our useState
     // ?? = if selected event is null use what's inside this const
@@ -45,15 +51,15 @@ import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 
     // what will happen when we submit our form
     function onSubmit() {
-        console.log(values);
         // remove any props you're no longer using when using router
         // check to see if there's anything inside selectedEvent
         // if we do have a selectedEvent then we want to update the event
-        // selectedEvent
-        //     ? updateEvent({...selectedEvent, ...values})
-        //     : addEvent({...values, id: createId(), hostedBy: 'bob', attendees: [], hostPhotoURL: ''});
-        // // after we submit our info into Create Event form, we want to close the form
-        // setFormOpen(false);
+        id = id ?? createId();
+        event
+            ? dispatch(updateEvent({...event, ...values}))
+            : dispatch(createEvent({...values, id, hostedBy: 'bob', attendees: [], hostPhotoURL: ''}));
+        // we want to navigate to the event we just updated or created
+        navigate(`/events/${id}`);
     }
 
     function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
