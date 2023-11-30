@@ -1,9 +1,10 @@
 import { Grid } from "semantic-ui-react";
 import EventList from "./EventList";
+import { useAppSelector } from "../../../app/store/store";
 // import EventForm from "../form/EventForm";
-import { sampleData } from "../../../app/api/sampleData";
-import { useEffect, useState } from "react"
-import { AppEvent } from "../../../app/types/event";
+// import { sampleData } from "../../../app/api/sampleData";
+// import { useEffect, useState } from "react"
+// import { AppEvent } from "../../../app/types/event";
 
 // do not need props when using router
 // add a type to store the Props
@@ -17,13 +18,17 @@ import { AppEvent } from "../../../app/types/event";
 // remove props when using router
 // export default function EventDashboard({ formOpen, setFormOpen, selectEvent, selectedEvent }: Props) {
     export default function EventDashboard() {
+        const {events} = useAppSelector(state => state.events)
+
     // events is an array of AppEvent
-    const [events, setEvents] = useState<AppEvent[]>([]);
+        // NO LONGER need useState because we are using store/routing
+    // const [events, setEvents] = useState<AppEvent[]>([]);
 
     // if we want something to only happen once then the last argument must be an empty array []
-    useEffect(() => {
-        setEvents(sampleData);
-    }, [])
+    // NO LONGER need useEffect because we are using store/routing
+    // useEffect(() => {
+    //     setEvents(sampleData);
+    // }, [])
 
     // do not need if using router
     // function addEvent(event: AppEvent) {
