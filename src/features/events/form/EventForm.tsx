@@ -1,6 +1,8 @@
 import { Button, Form, Header, Segment } from "semantic-ui-react";
 import { useEffect, useState, ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/store/store";
+
 
 // import { AppEvent } from "../../../app/types/event";
 // import { createId } from "@paralleldrive/cuid2";
@@ -19,11 +21,16 @@ import { Link } from "react-router-dom";
 // remove props when using router
 // export default function EventForm({ setFormOpen, addEvent, selectedEvent, updateEvent }: Props) {
     export default function EventForm() {
+    // add useParams hook
+    const { id } = useParams();
+    const event = useAppSelector(state => state.events.events.find(e => e.id === id));
+
     // create an object we can pass into our useState
     // ?? = if selected event is null use what's inside this const
     // do NOT need selectedEvent when using router
     // const initialValues = selectedEvent ?? {
-        const initialValues = {
+        // we replace this with event ?? meaning use event otherwise use the following
+        const initialValues = event ?? {
         title: '',
         category: '',
         description: '',
@@ -61,7 +68,8 @@ import { Link } from "react-router-dom";
             {/* : = or */}
             {/* remove props you aren't using with router */}
             {/* <Header content={selectedEvent ? 'Update Event' : 'Create Event'} /> */}
-            <Header content={'Create Event'} />
+            {/* replace selectedEvent with event because of useParam hook */}
+            <Header content={event ? 'Update event' : 'Create Event'} />
             <Form onSubmit={onSubmit}>
                 <Form.Field>
                     <input
