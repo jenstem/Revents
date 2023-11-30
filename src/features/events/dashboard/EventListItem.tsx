@@ -3,6 +3,8 @@ import EventListAttendee from "./EventListAttendee";
 // import AppEvent from event.ts
 import { AppEvent } from '../../../app/types/event';
 import { Link } from "react-router-dom";
+import { deleteEvent } from "../eventSlice";
+import { useAppDispatch } from "../../../app/store/store";
 
 type Props = {
     event:  AppEvent
@@ -14,6 +16,10 @@ type Props = {
 // revising when using router
 // export default function EventListItem({ event, selectEvent, deleteEvent }: Props) {
     export default function EventListItem({ event }: Props) {
+
+        // add hook for dispatch
+        const dispatch = useAppDispatch();
+
     return (
         <SegmentGroup>
             <Segment>
@@ -53,7 +59,7 @@ type Props = {
                 {/* get ride of click events when using router */}
                 {/* <Button color='red' floated='right' content='Delete' onClick={() => deleteEvent(event.id)}/>
                 <Button color='teal' floated='right' content='View' onClick={() => selectEvent(event)}/> */}
-                <Button color='red' floated='right' content='Delete' />
+                <Button onClick={() => dispatch(deleteEvent(event.id))}  color='red' floated='right' content='Delete' />
                 <Button as={Link} to={`/events/${event.id}`} color='teal' floated='right' content='View' />
             </Segment>
         </SegmentGroup>
