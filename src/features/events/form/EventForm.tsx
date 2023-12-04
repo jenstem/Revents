@@ -1,5 +1,4 @@
 import { Button, Form, Header, Segment } from "semantic-ui-react";
-import { useEffect, useState, ChangeEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { createEvent, updateEvent } from "../eventSlice";
@@ -62,16 +61,20 @@ export default function EventForm() {
 
     // what will happen when we submit our form
     function onSubmit(data: FieldValues) {
-        console.log(data);
         // remove any props you're no longer using when using router
         // check to see if there's anything inside selectedEvent
         // if we do have a selectedEvent then we want to update the event
-        // id = id ?? createId();
-        // event
-        //     ? dispatch(updateEvent({ ...event, ...values }))
-        //     : dispatch(createEvent({ ...values, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '' }));
+        id = id ?? createId();
+        event
+        // need to add date: data.date.toString() to change the date from a date object to a string
+            ? dispatch(updateEvent({ ...event, ...data, date: data.date.toString() }))
+            : dispatch(createEvent({ ...data, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '', date: data.date.toString() }));
+            // Above we changed ...values to ...data because we're using react-hook-form and we're no longer using values
+            // event
+            // ? dispatch(updateEvent({ ...event, ...values }))
+            // : dispatch(createEvent({ ...values, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '' }));
         // we want to navigate to the event we just updated or created
-        // navigate(`/events/${id}`);
+        navigate(`/events/${id}`);
     }
 
     // NO LONGER need this function, register with react-hook-form takes its place

@@ -12,8 +12,10 @@ export const router = createBrowserRouter([
         children: [
             { path: '/events', element: <EventDashboard /> },
             { path: '/events/:id', element: <EventDetailedPage /> },
+            // We need to give /createEvent a key with a unique id key='create', so there's a difference between
+            // createEvent and manageEvent
             { path: '/manage/:id', element: <EventForm /> },
-            { path: '/createEvent', element: <EventForm /> },
+            { path: '/createEvent', element: <EventForm key='create' /> },
             { path: '/scratch', element: <Scratch /> },
         ]
     }
