@@ -4,7 +4,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { createEvent, updateEvent } from "../eventSlice";
 import { createId } from "@paralleldrive/cuid2";
-import { FieldValues, useForm } from "react-hook-form";
+import { Controller, FieldValues, useForm } from "react-hook-form";
+import { categoryOptions } from "./categoryOptions";
 
 
 // import { AppEvent } from "../../../app/types/event";
@@ -32,7 +33,8 @@ export default function EventForm() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     // this comes from react-hook-form
-    const { register, handleSubmit, formState: {errors, isValid, isSubmitting} } = useForm({
+    // we need control for the Controller and dropdown option for category
+    const { register, handleSubmit, control, setValue, formState: { errors, isValid, isSubmitting } } = useForm({
         mode: 'onTouched'
     });
 
@@ -85,14 +87,14 @@ export default function EventForm() {
             {/* <Header content={selectedEvent ? 'Update Event' : 'Create Event'} /> */}
             {/* replace selectedEvent with event because of useParam hook */}
             {/* sub = subheader */}
-            <Header content={'Event details'} sub color='teal'/>
+            <Header content={'Event details'} sub color='teal' />
             {/* we want to use the react-hook-form onSubmit */}
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Input
                     placeholder='Event Title'
                     defaultValue={event?.title || ''}
                     // use {required: true} for a required field
-                    {...register('title', {required: true})}
+                    {...register('title', { required: true })}
                     // this will notify users that the title is required
                     error={errors.title && 'Title is required'}
                 // we'll use the name and value to update the state
@@ -100,32 +102,54 @@ export default function EventForm() {
                 // this is a change event for an HTML element
                 // onChange={e => handleInputChange(e)}
                 />
-
-                <Form.Input
-                    placeholder='Category'
-                    defaultValue={event?.category || ''}
-                    {...register('category', {required: 'Category is required'})}
-                    error={errors.category && errors.category.message}
+                {/* Form.Select is a dropdown for a form */}
+                {/* Form.TextArea is a text area for a form
+                uses Integrating Controlled Inputs, because it's controlled we
+                need rules instead of register */}
+                {/* only need 1 default value for the dropdown, if you have
+                a second one in the Form.Select take it out and leave
+                the one in the Controller */}
+                <Controller
+                    name='category'
+                    control={control}
+                    rules={{ required: 'Category is required' }}
+                    // ? = optional
+                    defaultValue={event?.category}
+                    render={({ field }) => (
+                        < Form.Select
+                            options={categoryOptions}
+                            placeholder='Category'
+                            clearable
+                            // defaultValue={event?.category || ''}
+                            {...field}
+                            // works with setValue
+                            // use onChange to update the state, so you don't get undefined for your category
+                            // put a _ for the first parameter because we don't need it, we only need the second parameter
+                            // we use the _ as a placeholder
+                            onChange={(_, d) => setValue('category', d.value, {shouldValidate: true})}
+                            error={errors.category && errors.category.message}
+                        />
+                    )}
                 />
-                {/* Form.TextArea is a text area for a form */}
+
                 <Form.TextArea
                     placeholder='Description'
                     defaultValue={event?.description || ''}
-                    {...register('description', {required: 'Description is required'})}
+                    {...register('description', { required: 'Description is required' })}
                     error={errors.description && errors.description.message}
                 />
-                <Header sub content='Location details' color='teal'/>
+                <Header sub content='Location details' color='teal' />
                 <Form.Input
                     placeholder='City'
                     defaultValue={event?.city || ''}
-                    {...register('city', {required: 'City is required'})}
+                    {...register('city', { required: 'City is required' })}
                     error={errors.city && errors.city.message}
                 />
 
                 <Form.Input
                     placeholder='Venue'
                     defaultValue={event?.venue || ''}
-                    {...register('venue', {required: 'Venue is required'})}
+                    {...register('venue', { required: 'Venue is required' })}
                     error={errors.venue && errors.venue.message}
                 />
 
@@ -133,7 +157,7 @@ export default function EventForm() {
                     type='date'
                     placeholder='Date'
                     defaultValue={event?.date || ''}
-                    {...register('date', {required: 'Date is required'})}
+                    {...register('date', { required: 'Date is required' })}
                     error={errors.date && errors.date.message}
                 />
 
