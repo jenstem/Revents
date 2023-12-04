@@ -6,6 +6,8 @@ import { createEvent, updateEvent } from "../eventSlice";
 import { createId } from "@paralleldrive/cuid2";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { categoryOptions } from "./categoryOptions";
+import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from 'react-datepicker';
 
 
 // import { AppEvent } from "../../../app/types/event";
@@ -152,14 +154,32 @@ export default function EventForm() {
                     {...register('venue', { required: 'Venue is required' })}
                     error={errors.venue && errors.venue.message}
                 />
-
-                <Form.Input
+                {/* Use Form.Field so we get the styling */}
+                <Form.Field>
+                        <Controller
+                            name='date'
+                            control={control}
+                            rules={{ required: 'Date is required' }}
+                            defaultValue={event && new Date(event.date) || null}
+                            render={({ field }) => (
+                                <DatePicker
+                                    selected={field.value}
+                                    onChange={value => setValue('date', value, {shouldValidate: true})}
+                                    showTimeSelect
+                                    timeCaption="time"
+                                    dateFormat='MMM d, yyyy h:mm aa'
+                                    placeholderText="Event date and time"
+                                />
+                            )}
+                        />
+                </Form.Field>
+                {/* <Form.Input
                     type='date'
                     placeholder='Date'
                     defaultValue={event?.date || ''}
                     {...register('date', { required: 'Date is required' })}
                     error={errors.date && errors.date.message}
-                />
+                /> */}
 
                 <Button loading={isSubmitting} type='submit' disabled={!isValid} floated='right' positive content='Submit' />
                 {/* the onClick is set to false because we want to close the form
