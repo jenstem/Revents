@@ -19,7 +19,7 @@ export const authSlice = createSlice({
             state.authenticated = true;
             state.currentUser = {
                 email: action.payload.email,
-                photoUrl: '/user.png',
+                photoURL: '/user.png',
             }
         },
         signOut: (state) => {

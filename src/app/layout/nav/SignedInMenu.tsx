@@ -2,7 +2,7 @@ import { Dropdown, Image, Menu } from "semantic-ui-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { signOut } from "../../../features/auth/authSlice";
-import { current } from "@reduxjs/toolkit";
+// import { current } from "@reduxjs/toolkit";
 
 // Can remove after creating authSlice.ts
 // type Props = {
