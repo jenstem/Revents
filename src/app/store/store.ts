@@ -4,6 +4,7 @@ import { testSlice } from "../../features/scratch/testSlice";
 // import eventSlice
 import { eventSlice } from "../../features/events/eventSlice";
 import { modalSlice } from "../common/modals/modalSlice";
+import { authSlice } from "../../features/auth/authSlice";
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +12,9 @@ export const store = configureStore({
         // add eventSlice reducer
         events: eventSlice.reducer,
         // add modalSlice reducer
-        modals: modalSlice.reducer
+        modals: modalSlice.reducer,
+        // add authSlice reducer
+        auth: authSlice.reducer
     }
 })
 

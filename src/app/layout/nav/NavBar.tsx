@@ -2,8 +2,9 @@ import { Button, Container, Menu, MenuItem } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 // import SignedOutButtons from "./SignedOutButtons";
 import SignedInMenu from "./SignedInMenu";
-import { useState } from "react";
+// import { useState } from "react";
 import SignedOutButtons from "./SignedOutButtons";
+import { useAppSelector } from "../../store/store";
 
 // add a type to store the Props
 // doesn't do anything except set the value to true or false
@@ -15,7 +16,9 @@ import SignedOutButtons from "./SignedOutButtons";
 // REMOVE PROPS here too if using router
 // export default function NavBar({setFormOpen}: Props) {
     export default function NavBar() {
-        const [auth, setAuth] = useState(false);
+        // we can remove this after we've created authSlice.ts
+        // const [auth, setAuth] = useState(false);
+        const { authenticated } = useAppSelector(state => state.auth);
     return (
         <Menu inverted={true} fixed="top">
             <Container>
@@ -46,7 +49,10 @@ import SignedOutButtons from "./SignedOutButtons";
                         inverted={true}
                         content="Create Event" />
                 </MenuItem>
-                {auth ? <SignedInMenu setAuth={setAuth}/> : <SignedOutButtons setAuth={setAuth}/>}
+
+                {/* remove setAuth from SignedInMenu and SignedOutButtons
+                after creating authSlice.ts */}
+                {authenticated ? <SignedInMenu /> : <SignedOutButtons />}
 
             </Container>
         </Menu>
