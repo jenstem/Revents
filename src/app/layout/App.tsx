@@ -7,6 +7,7 @@ import { Container } from "semantic-ui-react";
 import NavBar from "./nav/NavBar";
 import { Outlet, useLocation } from "react-router-dom";
 import HomePage from "../../features/home/HomePage";
+import ModalManager from "../common/modals/ModalManager";
 
 // When looking for a place to store state, App is a good place if you want to pass
 // state to both your NavBar and your EventDashboard
@@ -37,6 +38,7 @@ function App() {
     <>
       {location.pathname === '/' ? <HomePage /> : (
         <>
+        <ModalManager />
       {/* the NavBar and the EventDashboard are the two children */}
       {/* REMOVE THIS IF USING ROUTER */}
       {/* <NavBar setFormOpen={handleCreateFormOpen} /> */}
