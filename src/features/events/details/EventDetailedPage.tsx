@@ -9,7 +9,8 @@ import { useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useAppDispatch } from '../../../app/store/store';
 import { db } from '../../../app/config/firebase';
-import { setEvents } from '../eventSlice';
+// genericSlice import actions instead of setEvents
+import { actions } from '../eventSlice';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
@@ -18,7 +19,7 @@ import LoadingComponent from '../../../app/layout/LoadingComponent';
 export default function EventDetailedPage() {
     // add useParams hook
     const { id } = useParams();
-    const event = useAppSelector(state => state.events.events.find(e => e.id === id));
+    const event = useAppSelector(state => state.events.data.find(e => e.id === id));
     const dispatch = useAppDispatch();
     // add loading state
     const [loading, setLoading] = useState(true);
@@ -30,7 +31,9 @@ export default function EventDetailedPage() {
         if (!id) return;
         const unsubscribe = onSnapshot(doc(db, 'events', id), {
             next: doc => {
-                dispatch(setEvents({id: doc.id, ...doc.data()}))
+                // if you get an error from id, add "as any" to the end of the object
+                // change setEvents to actions.success after creating genericSlice
+                dispatch(actions.success({id: doc.id, ...doc.data()} as any))
                 setLoading(false);
             },
             error: err => {

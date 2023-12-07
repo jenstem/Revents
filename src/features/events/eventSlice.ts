@@ -2,32 +2,45 @@
 // import { act } from "react-dom/test-utils";
 import { sampleData } from "../../app/api/sampleData"
 import { AppEvent } from "../../app/types/event"
-import { createSlice } from "@reduxjs/toolkit";
+// import { createSlice } from "@reduxjs/toolkit";
 import { Timestamp } from "firebase/firestore";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { createGenericSlice, GenericState, GenericActions } from "../../app/store/genericSlice";
 
 // create type of State
 type State = {
-    events: AppEvent[]
+    // events: AppEvent[]
+    // change events to data because we are using genericSlice and we want to match it
+    data: AppEvent[]
 }
 
 // create initial state
 const initialState: State = {
     // events: sampleData - change because we changed the date from a string
     // to a timestamp for firestore
-    events: []
+    // events: []
+    // change events to data because we are using genericSlice and we want to match it
+    data: []
 }
 
 // export the slice
-export const eventSlice = createSlice({
+// we want to use the generic slice so we change createSlice to createGenericSlice
+// export const eventSlice = createSlice({
+    export const eventSlice = createGenericSlice({
     name: 'events',
-    initialState,
+    // initialState,
+    initialState: initialState as GenericState<AppEvent[]>,
     // reducer functions
     reducers: {
-        setEvents: {
+        // genericSlice - change setEvents to success
+        success: {
             // turn date into a string
             reducer: (state, action: PayloadAction<AppEvent[]>) => {
-                state.events = action.payload
+                // state.events = action.payload
+                // change events to data because we are using genericSlice and we want to match it
+                state.data = action.payload
+                // add finished
+                state.status = 'finished'
             },
             // check our prepare method to see what it does, are working with an array or object
             prepare: (events: any) => {
@@ -67,4 +80,6 @@ export const eventSlice = createSlice({
 )
 // also REMOVE these because we are no longer using them
 // export const { createEvent, updateEvent, deleteEvent, setEvents } = eventSlice.actions
-export const { setEvents } = eventSlice.actions
+// export const { setEvents } = eventSlice.actions
+// we want access to setEvents and genericSlice
+export const actions = eventSlice.actions as GenericActions<AppEvent[]>
