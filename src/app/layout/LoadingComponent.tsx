@@ -8,7 +8,7 @@ type Props = {
 // initialize value of Props
 export default function LoadingComponent({inverted = true, content = 'Loading...'}: Props) {
     return (
-        <Dimmer inverter={inverted} active={true}>
+        <Dimmer inverted={inverted} active={true}>
             <Loader content={content} />
         </Dimmer>
     )

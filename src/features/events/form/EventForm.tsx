@@ -11,6 +11,7 @@ import { AppEvent } from "../../../app/types/event";
 import { doc, setDoc, collection } from "firebase/firestore";
 import { db } from "../../../app/config/firebase";
 import { Timestamp, updateDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 
 // import { AppEvent } from "../../../app/types/event";
@@ -109,8 +110,10 @@ export default function EventForm() {
                 const ref = await createEvent(data);
                 navigate(`/events/${ref.id}`);
             }
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            // add toast error message
+            toast.error(error.message);
+            console.log(error.message);
         }
         // remove any props you're no longer using when using router
         // check to see if there's anything inside selectedEvent
