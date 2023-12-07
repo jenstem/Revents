@@ -3,8 +3,13 @@ import EventListAttendee from "./EventListAttendee";
 // import AppEvent from event.ts
 import { AppEvent } from '../../../app/types/event';
 import { Link } from "react-router-dom";
-import { deleteEvent } from "../eventSlice";
-import { useAppDispatch } from "../../../app/store/store";
+// import { deleteEvent } from "../eventSlice";
+// import { useAppDispatch } from "../../../app/store/store";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { db } from "../../../app/config/firebase";
+import { deleteDoc, doc } from "firebase/firestore";
+// import { set } from "firebase/database";
 
 type Props = {
     event:  AppEvent
@@ -18,7 +23,24 @@ type Props = {
     export default function EventListItem({ event }: Props) {
 
         // add hook for dispatch
-        const dispatch = useAppDispatch();
+        // const dispatch = useAppDispatch();
+        const [loading, setLoading] = useState(false);
+
+        async function removeEvent() {
+            setLoading(true);
+            try {
+                await deleteDoc(doc(db, 'events', event.id));
+                // setLoading(false);
+            } catch (error: any) {
+                console.log(error);
+                toast.error(error.message);
+                // setLoading(false);
+                // instead of having setLoading(false) in each catch block, we can use finally
+                // to use setLoading only once
+            } finally {
+                setLoading(false);
+            }
+        }
 
     return (
         <SegmentGroup>
@@ -59,7 +81,9 @@ type Props = {
                 {/* get ride of click events when using router */}
                 {/* <Button color='red' floated='right' content='Delete' onClick={() => deleteEvent(event.id)}/>
                 <Button color='teal' floated='right' content='View' onClick={() => selectEvent(event)}/> */}
-                <Button onClick={() => dispatch(deleteEvent(event.id))}  color='red' floated='right' content='Delete' />
+                {/* <Button loading={loading} onClick={() => dispatch(deleteEvent(event.id))}  color='red' floated='right' content='Delete' /> */}
+                {/* Add removeEvent function to delete event */}
+                <Button loading={loading} onClick={removeEvent}  color='red' floated='right' content='Delete' />
                 <Button as={Link} to={`/events/${event.id}`} color='teal' floated='right' content='View' />
             </Segment>
         </SegmentGroup>

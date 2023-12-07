@@ -45,24 +45,26 @@ export const eventSlice = createSlice({
                 return { payload: mapped }
             }
         },
-        createEvent: (state, action) => {
-            // in standard Redux, we would not be able to use push
-            // because it mutates the state
-            // but we can mutate the state in Redux Toolkit
-            // because it uses Immer under the hood and uses it as a draft state
-            // then it will create a new state based on the draft state
-            state.events.push(action.payload);
-        },
-        updateEvent: (state, action) => {
-            // looking for the event id that's equal to the payload id
-            state.events[state.events.findIndex(evt => evt.id === action.payload.id)] = action.payload
-        },
-        deleteEvent: (state, action) => {
-            // , 1) means delete 1 item
-            state.events.splice(state.events.findIndex(evt => evt.id === action.payload), 1)
-        }
+        // REMOVE these because we create createEvents and removeEvents etc functions instead
+        // createEvent: (state, action) => {
+        //     // in standard Redux, we would not be able to use push
+        //     // because it mutates the state
+        //     // but we can mutate the state in Redux Toolkit
+        //     // because it uses Immer under the hood and uses it as a draft state
+        //     // then it will create a new state based on the draft state
+        //     state.events.push(action.payload);
+        // },
+        // updateEvent: (state, action) => {
+        //     // looking for the event id that's equal to the payload id
+        //     state.events[state.events.findIndex(evt => evt.id === action.payload.id)] = action.payload
+        // },
+        // deleteEvent: (state, action) => {
+        //     // , 1) means delete 1 item
+        //     state.events.splice(state.events.findIndex(evt => evt.id === action.payload), 1)
+        // }
     }
 }
 )
-
-export const { createEvent, updateEvent, deleteEvent, setEvents } = eventSlice.actions
+// also REMOVE these because we are no longer using them
+// export const { createEvent, updateEvent, deleteEvent, setEvents } = eventSlice.actions
+export const { setEvents } = eventSlice.actions
