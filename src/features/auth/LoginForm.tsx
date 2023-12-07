@@ -26,7 +26,7 @@ export default function LoginForm() {
                     // when you want to add regex to an email
                     // use pattern: and make sure to put the regex in between / /
                     // also when you have two rules (required and pattern), you'll need two error messages
-                    {...register('email', { required: true, pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/ })}
+                    {...register('email', { required: true, pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/ })}
                     error={
                         errors.email?.type === 'required' && 'Email is required' ||
                         errors.email?.type === 'pattern' && 'Email is not valid'

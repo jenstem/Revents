@@ -5,6 +5,9 @@ import SignedInMenu from "./SignedInMenu";
 // import { useState } from "react";
 import SignedOutButtons from "./SignedOutButtons";
 import { useAppSelector } from "../../store/store";
+import { sampleData } from "../../api/sampleData";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 // add a type to store the Props
 // doesn't do anything except set the value to true or false
@@ -15,47 +18,76 @@ import { useAppSelector } from "../../store/store";
 // }
 // REMOVE PROPS here too if using router
 // export default function NavBar({setFormOpen}: Props) {
-    export default function NavBar() {
-        // we can remove this after we've created authSlice.ts
-        // const [auth, setAuth] = useState(false);
-        const { authenticated } = useAppSelector(state => state.auth);
-    return (
-        <Menu inverted={true} fixed="top">
-            <Container>
-{/* to specifies where you want to route to, / = home page */}
-                <MenuItem header as={NavLink} to='/'>
-                    <img src="/logo.png" alt="logo" />
-                    Re-vents
-                </MenuItem>
+export default function NavBar() {
+    // we can remove this after we've created authSlice.ts
+    // const [auth, setAuth] = useState(false);
+    const { authenticated } = useAppSelector(state => state.auth);
 
-                <MenuItem name='Events' as={NavLink} to='/events'/>
-                <MenuItem name='Scratch' as={NavLink} to='/scratch'/>
+    function seedData() {
+        sampleData.forEach(async event => {
+            // spread for rest of the properties
+            const { id, ...rest } = event;
+            // from firebase docs = setDocs, doc and db
+            // db gives us access to the database
+            // 'events' is the path to the collection
+            // id is the document id
+            await setDoc(doc(db, 'events', id), {
+                ...rest
+    })
+})
+}
+// then we'll create a button to seed the data
 
+return (
+    <Menu inverted={true} fixed="top">
+        <Container>
+            {/* to specifies where you want to route to, / = home page */}
+            <MenuItem header as={NavLink} to='/'>
+                <img src="/logo.png" alt="logo" />
+                Re-vents
+            </MenuItem>
+
+            <MenuItem name='Events' as={NavLink} to='/events' />
+            <MenuItem name='Scratch' as={NavLink} to='/scratch' />
+
+            <MenuItem>
+                <Button
+                    // set to true because we want to open the form
+                    // because we don't want the function to run right away
+                    // we want it to execute only when we click the button
+                    // we pass this function to another function
+                    // that's why we pass it through the onClick
+                    // and put an empty () => {} then it will wait till clicked
+                    // this means you won't see the Create Event form until the button is clicked
+                    // DO NOT NEED ONCLICK when using router - will use button as a link instead of as an onClick event
+                    // onClick={() => setFormOpen(true)}
+                    as={NavLink}
+                    to='/createEvent'
+                    floated='right'
+                    positive={true}
+                    inverted={true}
+                    content="Create Event" />
+            </MenuItem>
+            {/* check to see if we're in development mode
+            when we click the button it will populate data from the events
+            into our project on the Cloud Firestore site */}
+            {import.meta.env.DEV && (
                 <MenuItem>
                     <Button
-                        // set to true because we want to open the form
-                        // because we don't want the function to run right away
-                        // we want it to execute only when we click the button
-                        // we pass this function to another function
-                        // that's why we pass it through the onClick
-                        // and put an empty () => {} then it will wait till clicked
-                        // this means you won't see the Create Event form until the button is clicked
-                        // DO NOT NEED ONCLICK when using router - will use button as a link instead of as an onClick event
-                        // onClick={() => setFormOpen(true)}
-                        as={NavLink}
-                        to='/createEvent'
-                        floated='right'
-                        positive={true}
-                        inverted={true}
-                        content="Create Event" />
+                    onClick={seedData}
+                    inverted={true}
+                    color='teal'
+                    content='Seed data'
+                    />
                 </MenuItem>
 
-                {/* remove setAuth from SignedInMenu and SignedOutButtons
+            )}
+            {/* remove setAuth from SignedInMenu and SignedOutButtons
                 after creating authSlice.ts */}
-                {authenticated ? <SignedInMenu /> : <SignedOutButtons />}
+            {authenticated ? <SignedInMenu /> : <SignedOutButtons />}
 
-            </Container>
-        </Menu>
+        </Container>
+    </Menu>
 
-    )
+)
 }

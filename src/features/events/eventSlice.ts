@@ -1,8 +1,10 @@
 // import
-import { act } from "react-dom/test-utils";
+// import { act } from "react-dom/test-utils";
 import { sampleData } from "../../app/api/sampleData"
 import { AppEvent } from "../../app/types/event"
 import { createSlice } from "@reduxjs/toolkit";
+import { Timestamp } from "firebase/firestore";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 // create type of State
 type State = {
@@ -11,14 +13,29 @@ type State = {
 
 // create initial state
 const initialState: State = {
-    events: sampleData
+    // events: sampleData - change because we changed the date from a string
+    // to a timestamp for firestore
+    events: []
 }
 
 // export the slice
 export const eventSlice = createSlice({
     name: 'events',
     initialState,
+    // reducer functions
     reducers: {
+        setEvents: {
+            // turn date into a string
+            reducer: (state, action: PayloadAction<AppEvent[]>) => {
+                state.events = action.payload
+            },
+            prepare: (events: any) => {
+                const mapped = events.map((e: any) => {
+                    return { ...e, date: (e.date as Timestamp).toDate().toISOString() }
+                });
+                return { payload: mapped }
+            }
+        },
         createEvent: (state, action) => {
             // in standard Redux, we would not be able to use push
             // because it mutates the state
@@ -39,4 +56,4 @@ export const eventSlice = createSlice({
 }
 )
 
-export const { createEvent, updateEvent, deleteEvent } = eventSlice.actions
+export const { createEvent, updateEvent, deleteEvent, setEvents } = eventSlice.actions

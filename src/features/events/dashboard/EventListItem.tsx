@@ -47,7 +47,7 @@ type Props = {
             </Segment>
             <Segment secondary>
                 <List horizontal>
-                    {event.attendees.map((attendee: any) => (
+                    {event.attendees.map(attendee => (
                         // need to give attendee a unique key
                         <EventListAttendee key={attendee.id} attendee={attendee} />
                     ))}
