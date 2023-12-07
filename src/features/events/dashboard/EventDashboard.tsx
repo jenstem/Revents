@@ -9,6 +9,8 @@ import { db } from "../../../app/config/firebase";
 import { AppEvent } from "../../../app/types/event";
 import App from "../../../app/layout/App";
 import { setEvents } from "../eventSlice";
+import { useState } from "react";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 // do not need props when using router
 // add a type to store the Props
@@ -24,6 +26,8 @@ import { setEvents } from "../eventSlice";
     export default function EventDashboard() {
         const {events} = useAppSelector(state => state.events);
         const dispatch = useAppDispatch();
+        // set up loading
+        const [loading, setLoading] = useState(true);
 
         // this is how we listen to data from firestore
         // populate events using useEffect
@@ -49,9 +53,15 @@ import { setEvents } from "../eventSlice";
                     })
                     // dispatch the events to the store
                     dispatch(setEvents(evts));
+                    // set loading to false
+                    setLoading(false);
                 },
                 // specify what to do in case of error
-                error: err => console.log(err),
+                // and turn off loading
+                error: err => {
+                    console.log(err)
+                    setLoading(false);
+                },
                 // specify what to do when it's complete
                 // this will never be called because it's a never ending stream of events
                 complete: () => console.log('never will see this!')
@@ -61,6 +71,10 @@ import { setEvents } from "../eventSlice";
             // empty array means it will only run once
             // but we need to pass dispatch in the array because it's a dependency
         }, [dispatch])
+
+        // check if loading is true
+        // if it is, then display LoadingComponent file
+        if (loading) return <LoadingComponent />
 
     // events is an array of AppEvent
         // NO LONGER need useState because we are using store/routing
