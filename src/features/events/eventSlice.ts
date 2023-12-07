@@ -81,5 +81,5 @@ const initialState: State = {
 // also REMOVE these because we are no longer using them
 // export const { createEvent, updateEvent, deleteEvent, setEvents } = eventSlice.actions
 // export const { setEvents } = eventSlice.actions
-// we want access to setEvents and genericSlice
+// we want access to all actions, genericSlice
 export const actions = eventSlice.actions as GenericActions<AppEvent[]>
