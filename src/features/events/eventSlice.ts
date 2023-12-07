@@ -29,8 +29,17 @@ export const eventSlice = createSlice({
             reducer: (state, action: PayloadAction<AppEvent[]>) => {
                 state.events = action.payload
             },
+            // check our prepare method to see what it does, are working with an array or object
             prepare: (events: any) => {
-                const mapped = events.map((e: any) => {
+                // we're saying eventArray is a type of AppEvent and set it equal to an empty array
+                // use let when something will be updated
+                let eventArray: AppEvent[] = [];
+                // check to see if events is an array or object
+                // if it is an array set eventArray equal to events
+                // if it is an array push events into eventArray
+                Array.isArray(events) ? eventArray = events : eventArray.push(events)
+                // now that we created eventArray, we'll need to map over that instead of just events
+                const mapped = eventArray.map((e: any) => {
                     return { ...e, date: (e.date as Timestamp).toDate().toISOString() }
                 });
                 return { payload: mapped }
