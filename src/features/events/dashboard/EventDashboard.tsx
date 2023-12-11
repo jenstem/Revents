@@ -4,15 +4,16 @@ import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 // import EventForm from "../form/EventForm";
 // import { sampleData } from "../../../app/api/sampleData";
 import { useEffect } from "react"
-import { onSnapshot, collection, query } from "firebase/firestore";
-import { db } from "../../../app/config/firebase";
-import { AppEvent } from "../../../app/types/event";
-import App from "../../../app/layout/App";
+// import { onSnapshot, collection, query } from "firebase/firestore";
+// import { db } from "../../../app/config/firebase";
+// import { AppEvent } from "../../../app/types/event";
+// import App from "../../../app/layout/App";
 // we no longer need this after creating genericSlice
 // import { setEvents } from "../eventSlice";
-import { useState } from "react";
+// import { useState } from "react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { actions } from "../eventSlice";
+import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
 
 // do not need props when using router
 // add a type to store the Props
@@ -30,59 +31,69 @@ export default function EventDashboard() {
     // because we added the genericSlice, we need to destructure the events
     // put data: events instead of just events
     // we get the data from our store and reference the events
-    const { data: events } = useAppSelector(state => state.events);
-    const dispatch = useAppDispatch();
+    // add data: status for useFirestore.ts
+    const { data: events, status } = useAppSelector(state => state.events);
+    // const dispatch = useAppDispatch();
     // set up loading
-    const [loading, setLoading] = useState(true);
+    // remove after creating useFirestore.ts
+    // const [loading, setLoading] = useState(true);
+    // use the loading from useFirestore.ts
+    const { loadCollection } = useFireStore('events');
 
+    // remove after creating useFirestore.ts
     // this is how we listen to data from firestore
     // populate events using useEffect
     useEffect(() => {
+        loadCollection(actions)
+    }, [loadCollection])
+
+    if (status === 'loading') return <LoadingComponent />
         // create a variable to store the query in
         // inside the query, specify the collection, the database(from firebase) and the path to the collection
-        const q = query(collection(db, 'events'));
+        // > const q = query(collection(db, 'events'));
         // onSnapshot is a listener that will listen to any changes in the database
         // pass onSnapshot to the query and observer object = next: querySnapshot
         // querySnapshot is a snapshot of the data in the database
-        const unsubscribe = onSnapshot(q, {
+        //  > const unsubscribe = onSnapshot(q, {
             // what will happen next after we receive the data
             // we'll get a querySnapshot returned from the onSnapshot method
-            next: querySnapshot => {
+            // > next: querySnapshot => {n
                 // create an empty array to store the events
-                const evts: AppEvent[] = [];
+                // > const evts: AppEvent[] = [];
                 // for each document, we'll push that document into an array
-                querySnapshot.forEach(doc => {
+                // > querySnapshot.forEach(doc => {
                     // push the document id and the data into the array
                     // it doesn't understand what the data is coming back as
                     // so we specify as AppEvent, what it can expect
-                    evts.push({ id: doc.id, ...doc.data() } as AppEvent)
-                })
+                //  >   evts.push({ id: doc.id, ...doc.data() } as AppEvent)
+                // })
                 // dispatch the events to the store
                 // dispatch(setEvents(evts));
                 // change setEvents to actions.success after creating genericSlice
-                dispatch(actions.success(evts));
+                //  > dispatch(actions.success(evts));
                 // set loading to false
-                setLoading(false);
-            },
+            //    > setLoading(false);
+            // },
             // specify what to do in case of error
             // and turn off loading
-            error: err => {
-                console.log(err)
-                setLoading(false);
-            },
+            // > error: err => {
+            //  >   console.log(err)
+            //   >  setLoading(false);
+            // },
             // specify what to do when it's complete
             // this will never be called because it's a never ending stream of events
-            complete: () => console.log('never will see this!')
-        });
+        //  >   complete: () => console.log('never will see this!')
+        // });
         // no longer listening when we leave this component
-        return () => unsubscribe()
+        // > return () => unsubscribe()
         // empty array means it will only run once
         // but we need to pass dispatch in the array because it's a dependency
-    }, [dispatch])
+    // > }, [dispatch])
+
 
     // check if loading is true
     // if it is, then display LoadingComponent file
-    if (loading) return <LoadingComponent />
+    // if (loading) return <LoadingComponent />
 
     // events is an array of AppEvent
     // NO LONGER need useState because we are using store/routing
