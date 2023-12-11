@@ -13,6 +13,8 @@ city: string
 venue: string
 hostedBy: string
 hostPhotoURL: string
+// add boolean for cancel
+isCancelled: boolean
 // this is an array
 attendees: Attendee[]
 }

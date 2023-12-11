@@ -1,4 +1,4 @@
-import { Button, Icon, Item, ItemGroup, List, Segment, SegmentGroup } from "semantic-ui-react";
+import { Button, Icon, Item, ItemGroup, Label, List, Segment, SegmentGroup } from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 // import AppEvent from event.ts
 import { AppEvent } from '../../../app/types/event';
@@ -9,7 +9,10 @@ import { Link } from "react-router-dom";
 // import { toast } from "react-toastify";
 // import { db } from "../../../app/config/firebase";
 // import { deleteDoc, doc } from "firebase/firestore";
-import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
+
+// remove because we are using CANCEL instead of DELETE
+// import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
+
 // import { set } from "firebase/database";
 
 type Props = {
@@ -24,7 +27,8 @@ type Props = {
 export default function EventListItem({ event }: Props) {
 
     // add remove from CRUD from useFirestore.ts
-    const { remove } = useFireStore('events');
+    // REMOVE this in order to add CANCEL event
+    // const { remove } = useFireStore('events');
 
     // add hook for dispatch
     // const dispatch = useAppDispatch();
@@ -62,6 +66,17 @@ export default function EventListItem({ event }: Props) {
                             <Item.Description>
                                 Hosted by {event.hostedBy}
                             </Item.Description>
+
+                            {/* add conditional rendering for cancelled events */}
+                            {event.isCancelled && (
+                                <Label
+                                    style={{ top: '-40px' }}
+                                    ribbon='right'
+                                    color='red'
+                                    content='This event has been cancelled'
+                                />
+                            )}
+
                         </Item.Content>
                     </Item>
                 </ItemGroup>
@@ -93,7 +108,10 @@ export default function EventListItem({ event }: Props) {
 
                 {/* remove after adding CRUD from useFirestore.ts
                 <Button loading={loading} onClick={removeEvent} color='red' floated='right' content='Delete' /> */}
-                <Button onClick={() => remove(event.id)} color='red' floated='right' content='Delete' />
+
+                {/* Remove the delete button because we are going to add CANCEL instead */}
+                {/* <Button onClick={() => remove(event.id)} color='red' floated='right' content='Delete' /> */}
+
                 <Button as={Link} to={`/events/${event.id}`} color='teal' floated='right' content='View' />
             </Segment>
         </SegmentGroup>

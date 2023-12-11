@@ -47,7 +47,7 @@ export default function EventForm() {
         mode: 'onTouched',
         defaultValues: async () => {
             // received error - Invalid Time value - fix with this
-            if (event) return {...event, date: new Date(event.date)}
+            if (event) return { ...event, date: new Date(event.date) }
         }
     });
 
@@ -86,7 +86,7 @@ export default function EventForm() {
         // change updateDoc to update, and docRef to data.id
         // once imported CRUD functions from useFirestore.ts
         // await updateDoc(docRef, {
-            await update(data.id, {
+        await update(data.id, {
 
             // specify data you want to update, spread the data
             ...data,
@@ -122,6 +122,15 @@ export default function EventForm() {
         // return ref instead of newEventRef - CRUD from useFirestore.ts
         // return newEventRef;
         return ref;
+    }
+
+    // cancel event function
+    // redundant to add a try/catch block since update already has it
+    async function handleCancelToggle(event: AppEvent) {
+        await update(event.id, {
+            isCancelled: !event.isCancelled
+        });
+        toast.success(`Event has been ${event.isCancelled ? 'uncancelled' : 'cancelled'}`)
     }
 
     // this comes from react-hook-form
@@ -299,6 +308,18 @@ export default function EventForm() {
                     {...register('date', { required: 'Date is required' })}
                     error={errors.date && errors.date.message}
                 /> */}
+
+{/* add handleCancelToggle to onClick
+    Button will only show if event has been created */}
+                {event && (
+                    <Button
+                        type='button'
+                        floated='left'
+                        color={event.isCancelled ? 'green' : 'red'}
+                        onClick={() => handleCancelToggle(event)}
+                        content={event.isCancelled ? 'Reactivate event' : 'Cancel event'}
+                    />
+                )}
 
                 <Button loading={isSubmitting} type='submit' disabled={!isValid} floated='right' positive content='Submit' />
                 {/* the onClick is set to false because we want to close the form
