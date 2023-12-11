@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useAppDispatch } from '../../store/store';
 import { GenericActions } from '../../store/genericSlice';
-import { collection, DocumentData, onSnapshot, doc } from 'firebase/firestore';
+import { collection, DocumentData, onSnapshot, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from "../../config/firebase";
+import { toast } from 'react-toastify';
 
 type ListenerState = {
     name?: string
@@ -10,7 +11,9 @@ type ListenerState = {
 }
 
 // every hook has to start with use
-export const useFireStore = <T>(path: string) => {
+// <T extends DocumentData> - add "extends DocumentData" if you get an error when using data
+// in a function below that mentions T
+export const useFireStore = <T extends DocumentData>(path: string) => {
     // store listener references so we can unsubscribe from them
     // useRef that lets you make changes and you won't have to re-render
     // use Ref will persist for the full lifetime of the component
@@ -81,9 +84,47 @@ export const useFireStore = <T>(path: string) => {
                 dispatch(actions.success({ id: doc.id, ...doc.data() } as unknown as T))
             }
         })
-        listenersRef.current.push({name: path + '/' + id, unsubscribe: listener})
+        listenersRef.current.push({ name: path + '/' + id, unsubscribe: listener })
         // add dependencies
     }, [dispatch, path])
 
-    return { loadCollection, loadDocument }
+    // create a document
+    const create = async (data: T) => {
+        try {
+            const ref = doc(collection(db, path));
+            // add "extends DocumentData" to "export const useFireStore"
+            // if you get an error when using data
+            // in a function that mentions T
+            await setDoc(ref, data);
+            // continue to use ref so that we can get the id of the document
+            return ref;
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
+
+    // update a document
+    const update = async (id: string, data: T) => {
+        const docRef = doc(db, path, id);
+        try {
+            return await updateDoc(docRef, data);
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
+
+    // delete a document
+    // can NOT use delete as a function name
+    const remove = async (id: string) => {
+        try {
+            return await deleteDoc(doc(db, path, id));
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
+
+    return { loadCollection, loadDocument, create, update, remove }
 }

@@ -8,8 +8,8 @@ import { categoryOptions } from "./categoryOptions";
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
 import { AppEvent } from "../../../app/types/event";
-import { doc, setDoc, collection } from "firebase/firestore";
-import { db } from "../../../app/config/firebase";
+// import { doc, setDoc, collection } from "firebase/firestore";
+// import { db } from "../../../app/config/firebase";
 import { Timestamp, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 // add to use with firestore
@@ -38,7 +38,8 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 export default function EventForm() {
 
     // bring in firestore hook
-    const { loadDocument } = useFireStore('events');
+    // add create and update from useFirestore.ts
+    const { loadDocument, create, update } = useFireStore('events');
 
     // this comes from react-hook-form
     // we need control for the Controller and dropdown option for category
@@ -77,9 +78,16 @@ export default function EventForm() {
     async function updateEvent(data: AppEvent) {
         if (!event) return;
         // doc comes from firestore, db is database, collection you're going to update, id of event
-        const docRef = doc(db, 'events', event.id);
+
+        // remove const docRef once imported CRUD functions from useFirestore.ts
+        // const docRef = doc(db, 'events', event.id);
+
         // updateDoc is from firestore
-        await updateDoc(docRef, {
+        // change updateDoc to update, and docRef to data.id
+        // once imported CRUD functions from useFirestore.ts
+        // await updateDoc(docRef, {
+            await update(data.id, {
+
             // specify data you want to update, spread the data
             ...data,
             // we need to turn date into a firestore Timestamp
@@ -96,15 +104,24 @@ export default function EventForm() {
         // so that we can redirect to the event we just created, we don't know the id yet
         // therefore, we need to reference the document BEFORE it's been created
         // can use doc and setDoc() to create a document with an auto-generated id
-        const newEventRef = doc(collection(db, 'events'));
-        await setDoc(newEventRef, {
+
+        // remove const newEventRef once imported CRUD functions from useFirestore.ts
+        // const newEventRef = doc(collection(db, 'events'));
+
+        // revise to use CRUD from useFirestore.ts
+        // await setDoc(newEventRef, {
+        const ref = await create({
+
             ...data,
             hostedBy: 'bob',
             attendees: [],
             hostPhotoURL: '',
             date: Timestamp.fromDate(data.date as unknown as Date),
         })
-        return newEventRef;
+
+        // return ref instead of newEventRef - CRUD from useFirestore.ts
+        // return newEventRef;
+        return ref;
     }
 
     // this comes from react-hook-form
@@ -141,7 +158,10 @@ export default function EventForm() {
                 navigate(`/events/${event.id}`);
             } else {
                 const ref = await createEvent(data);
-                navigate(`/events/${ref.id}`);
+
+                // if adding CRUD from useFirestore.ts gives ref an error
+                // just add a ? after ref
+                navigate(`/events/${ref?.id}`);
             }
         } catch (error: any) {
             // add toast error message

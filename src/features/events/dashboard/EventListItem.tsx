@@ -5,14 +5,15 @@ import { AppEvent } from '../../../app/types/event';
 import { Link } from "react-router-dom";
 // import { deleteEvent } from "../eventSlice";
 // import { useAppDispatch } from "../../../app/store/store";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import { db } from "../../../app/config/firebase";
-import { deleteDoc, doc } from "firebase/firestore";
+// import { useState } from "react";
+// import { toast } from "react-toastify";
+// import { db } from "../../../app/config/firebase";
+// import { deleteDoc, doc } from "firebase/firestore";
+import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
 // import { set } from "firebase/database";
 
 type Props = {
-    event:  AppEvent
+    event: AppEvent
     // do not need when using router
     // selectEvent: (event: AppEvent) => void;
     // deleteEvent: (eventId: string) => void;
@@ -20,27 +21,33 @@ type Props = {
 // pass Props from event.ts to EventListItem
 // revising when using router
 // export default function EventListItem({ event, selectEvent, deleteEvent }: Props) {
-    export default function EventListItem({ event }: Props) {
+export default function EventListItem({ event }: Props) {
 
-        // add hook for dispatch
-        // const dispatch = useAppDispatch();
-        const [loading, setLoading] = useState(false);
+    // add remove from CRUD from useFirestore.ts
+    const { remove } = useFireStore('events');
 
-        async function removeEvent() {
-            setLoading(true);
-            try {
-                await deleteDoc(doc(db, 'events', event.id));
-                // setLoading(false);
-            } catch (error: any) {
-                console.log(error);
-                toast.error(error.message);
-                // setLoading(false);
-                // instead of having setLoading(false) in each catch block, we can use finally
-                // to use setLoading only once
-            } finally {
-                setLoading(false);
-            }
-        }
+    // add hook for dispatch
+    // const dispatch = useAppDispatch();
+
+    // remove after adding CRUD from useFirestore.ts
+    // const [loading, setLoading] = useState(false);
+
+    // remove after adding CRUD from useFirestore.ts
+    // async function removeEvent() {
+    // setLoading(true);
+    // try {
+    //     await deleteDoc(doc(db, 'events', event.id));
+    //     // setLoading(false);
+    // } catch (error: any) {
+    //     console.log(error);
+    //     toast.error(error.message);
+    //     // setLoading(false);
+    //     // instead of having setLoading(false) in each catch block, we can use finally
+    //     // to use setLoading only once
+    // } finally {
+    //     setLoading(false);
+    // }
+    // }
 
     return (
         <SegmentGroup>
@@ -83,7 +90,10 @@ type Props = {
                 <Button color='teal' floated='right' content='View' onClick={() => selectEvent(event)}/> */}
                 {/* <Button loading={loading} onClick={() => dispatch(deleteEvent(event.id))}  color='red' floated='right' content='Delete' /> */}
                 {/* Add removeEvent function to delete event */}
-                <Button loading={loading} onClick={removeEvent}  color='red' floated='right' content='Delete' />
+
+                {/* remove after adding CRUD from useFirestore.ts
+                <Button loading={loading} onClick={removeEvent} color='red' floated='right' content='Delete' /> */}
+                <Button onClick={() => remove(event.id)} color='red' floated='right' content='Delete' />
                 <Button as={Link} to={`/events/${event.id}`} color='teal' floated='right' content='View' />
             </Segment>
         </SegmentGroup>
