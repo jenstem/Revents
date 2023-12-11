@@ -12,6 +12,11 @@ import { doc, setDoc, collection } from "firebase/firestore";
 import { db } from "../../../app/config/firebase";
 import { Timestamp, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+// add to use with firestore
+import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
+import { useEffect } from "react";
+import { actions } from "../eventSlice";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 
 // import { AppEvent } from "../../../app/types/event";
@@ -31,14 +36,42 @@ import { toast } from "react-toastify";
 // remove props when using router
 // export default function EventForm({ setFormOpen, addEvent, selectedEvent, updateEvent }: Props) {
 export default function EventForm() {
+
+    // bring in firestore hook
+    const { loadDocument } = useFireStore('events');
+
+    // this comes from react-hook-form
+    // we need control for the Controller and dropdown option for category
+    const { register, handleSubmit, control, setValue, formState: { errors, isValid, isSubmitting } } = useForm({
+        mode: 'onTouched',
+        defaultValues: async () => {
+            // received error - Invalid Time value - fix with this
+            if (event) return {...event, date: new Date(event.date)}
+        }
+    });
+
     // add useParams hook
     // need to change const { id } = use Params() to let { id } = useParams()
     // we need to change the id to let because we'll be updating the id
     // we can change it back to const because we're no longer updating the id
     const { id } = useParams();
-    const event = useAppSelector(state => state.events.events.find(e => e.id === id));
+
+    // change events to data - firestore
+    // const event = useAppSelector(state => state.events.events.find(e => e.id === id));
+    const event = useAppSelector(state => state.events.data.find(e => e.id === id));
+
+    // add status - firestore
+    const { status } = useAppSelector(state => state.events);
+
     // const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    // add useEffect hook - firestore
+    useEffect(() => {
+        if (!id) return;
+        // if we do have an id
+        loadDocument(id, actions)
+    }, [id, loadDocument])
 
     // update event function
     async function updateEvent(data: AppEvent) {
@@ -76,9 +109,9 @@ export default function EventForm() {
 
     // this comes from react-hook-form
     // we need control for the Controller and dropdown option for category
-    const { register, handleSubmit, control, setValue, formState: { errors, isValid, isSubmitting } } = useForm({
-        mode: 'onTouched'
-    });
+    // const { register, handleSubmit, control, setValue, formState: { errors, isValid, isSubmitting } } = useForm({
+    //     mode: 'onTouched'
+    // });
 
     // create an object we can pass into our useState
     // ?? = if selected event is null use what's inside this const
@@ -104,7 +137,7 @@ export default function EventForm() {
     async function onSubmit(data: FieldValues) {
         try {
             if (event) {
-                await updateEvent({...event, ...data});
+                await updateEvent({ ...event, ...data });
                 navigate(`/events/${event.id}`);
             } else {
                 const ref = await createEvent(data);
@@ -115,23 +148,30 @@ export default function EventForm() {
             toast.error(error.message);
             console.log(error.message);
         }
-        // remove any props you're no longer using when using router
-        // check to see if there's anything inside selectedEvent
-        // if we do have a selectedEvent then we want to update the event
-        // remove this code because we created a function for updateEvent and createEvent above instead
-        // id = id ?? createId();
-        // event
-        // need to add date: data.date.toString() to change the date from a date object to a string
-        // dispatching update to store and then we see that update in our browser
-        // ? dispatch(updateEvent({ ...event, ...data, date: data.date.toString() }))
-        // : dispatch(createEvent({ ...data, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '', date: data.date.toString() }));
-        // Above we changed ...values to ...data because we're using react-hook-form and we're no longer using values
-        // event
-        // ? dispatch(updateEvent({ ...event, ...values }))
-        // : dispatch(createEvent({ ...values, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '' }));
-        // we want to navigate to the event we just updated or created
-        // navigate(`/events/${id}`);
     }
+
+    // check to see if we're loading - firestore
+    if (status === 'loading') return <LoadingComponent />
+
+
+
+    // remove any props you're no longer using when using router
+    // check to see if there's anything inside selectedEvent
+    // if we do have a selectedEvent then we want to update the event
+    // remove this code because we created a function for updateEvent and createEvent above instead
+    // id = id ?? createId();
+    // event
+    // need to add date: data.date.toString() to change the date from a date object to a string
+    // dispatching update to store and then we see that update in our browser
+    // ? dispatch(updateEvent({ ...event, ...data, date: data.date.toString() }))
+    // : dispatch(createEvent({ ...data, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '', date: data.date.toString() }));
+    // Above we changed ...values to ...data because we're using react-hook-form and we're no longer using values
+    // event
+    // ? dispatch(updateEvent({ ...event, ...values }))
+    // : dispatch(createEvent({ ...values, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '' }));
+    // we want to navigate to the event we just updated or created
+    // navigate(`/events/${id}`);
+    // }
 
     // NO LONGER need this function, register with react-hook-form takes its place
     // function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
