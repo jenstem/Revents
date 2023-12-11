@@ -29,7 +29,7 @@ export default function EventDetailedPage() {
     // remove after creating useFirestore.ts
     // const [loading, setLoading] = useState(true);
 
-    // add fter creating useFirestore.ts
+    // add after creating useFirestore.ts
     const {loadDocument} = useFireStore('events');
 
     // use the useEffect hook to listen to the changes in the URL
