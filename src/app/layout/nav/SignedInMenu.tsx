@@ -1,7 +1,10 @@
 import { Dropdown, Image, Menu } from "semantic-ui-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import { signOut } from "../../../features/auth/authSlice";
+import { useAppSelector } from "../../store/store";
+// import for authentication
+import { signOut } from "firebase/auth";
+import { auth } from "../../config/firebase";
+
 // import { current } from "@reduxjs/toolkit";
 
 // Can remove after creating authSlice.ts
@@ -11,11 +14,17 @@ import { signOut } from "../../../features/auth/authSlice";
 
 export default function SignedInMenu() {
     const { currentUser } = useAppSelector(state => state.auth);
-    const dispatch = useAppDispatch();
+    // authentication - do not need this code if using authSlice.ts
+    // const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    function handleSignOut() {
-        dispatch(signOut());
+    async function handleSignOut() {
+        // add async/await and signOut(auth) for authentication
+        await signOut(auth)
+
+        // authentication - do not need this code if using authSlice.ts
+        // dispatch(signOut());
+
         // Can remove after creating authSlice.ts
         // setAuth(false);
         // sends user back to homepage
@@ -26,7 +35,8 @@ export default function SignedInMenu() {
         <Menu.Item position='right'>
             <Image avatar spaced='right' src='/user.png' />
             {/* add currentUser?.email instead of hardcoding Bob */}
-            <Dropdown pointing='top left' text={currentUser?.email}>
+            {/* if "text" has an error, add "as string" after it */}
+            <Dropdown pointing='top left' text={currentUser?.email as string}>
             <Dropdown.Menu>
                 <Dropdown.Item as={Link} to='/createEvent' text='Create event' icon='plus' />
                 <Dropdown.Item text='My profile' icon='user' />
