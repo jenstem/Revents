@@ -8,9 +8,15 @@ import { closeModal } from "../../app/common/modals/modalSlice";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../app/config/firebase";
 import { signIn } from "./authSlice";
+// import useFirestore hook for user profiles
+import { useFireStore } from "../../app/hooks/firestore/useFirestore";
+import { Timestamp } from "firebase/firestore";
 
 // change to RegisterForm
 export default function RegisterForm() {
+    // bring in firestore hook for user profiles
+    const { set } = useFireStore('profiles');
+
     // add setError for create account errors
     const { register, handleSubmit, setError, formState: { isSubmitting, isValid, isDirty, errors } } = useForm({
         mode: 'onTouched'
@@ -25,6 +31,14 @@ export default function RegisterForm() {
             await updateProfile(userCreds.user, {
                 displayName: data.displayName
             })
+
+            // after we've updated the profile then we can set the profile in firestore
+            await set(userCreds.user.uid, {
+                displayName: data.displayName,
+                email: data.email,
+                createdAt: Timestamp.now(),
+            })
+
             // dispatch signIn
             dispatch(signIn(userCreds.user));
             dispatch(closeModal());
