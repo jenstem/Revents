@@ -1,4 +1,4 @@
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, Label } from "semantic-ui-react";
 import ModalWrapper from "../../app/common/modals/ModalWrapper";
 import { FieldValues, useForm } from "react-hook-form";
 import { useAppDispatch } from "../../app/store/store";
@@ -9,7 +9,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../app/config/firebase";
 
 export default function LoginForm() {
-    const { register, handleSubmit, formState: { isSubmitting, isValid, isDirty, errors } } = useForm({
+    // add setError for login errors
+    const { register, handleSubmit, setError, formState: { isSubmitting, isValid, isDirty, errors } } = useForm({
         mode: 'onTouched'
     })
     const dispatch = useAppDispatch();
@@ -29,8 +30,10 @@ export default function LoginForm() {
             // in App.tsx
             // dispatch(signIn(result.user));
             dispatch(closeModal());
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            setError('root.serverError', {
+                type: '400', message: error.message
+            })
         }
     }
 
@@ -58,6 +61,16 @@ export default function LoginForm() {
                     {...register('password', { required: true })}
                     error={errors.password && 'Password is required'}
                 />
+                {/* add Label for serverError */}
+                {errors.root && (
+                    <Label
+                        basic
+                        color='red'
+                        style={{ display: 'block', marginBottom: 10 }}
+                        // use serverError here
+                        content={errors.root.serverError.message}
+                    />
+                )}
                 <Button
                     loading={isSubmitting}
                     // isDirty means nothing has been submitted into the fields
