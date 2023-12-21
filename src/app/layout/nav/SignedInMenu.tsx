@@ -33,10 +33,13 @@ export default function SignedInMenu() {
 
     return (
         <Menu.Item position='right'>
-            <Image avatar spaced='right' src='/user.png' />
+            {/* add currentUser?.photoURL instead of hardcoding /user.png, give backup image */}
+            <Image avatar spaced='right' src={currentUser?.photoURL || '/user.png'} />
             {/* add currentUser?.email instead of hardcoding Bob */}
             {/* if "text" has an error, add "as string" after it */}
-            <Dropdown pointing='top left' text={currentUser?.email as string}>
+            {/* <Dropdown pointing='top left' text={currentUser?.email as string}> */}
+            {/* display displayName instead of email */}
+            <Dropdown pointing='top left' text={currentUser?.displayName as string}>
             <Dropdown.Menu>
                 <Dropdown.Item as={Link} to='/createEvent' text='Create event' icon='plus' />
                 <Dropdown.Item text='My profile' icon='user' />

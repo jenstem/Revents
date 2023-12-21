@@ -1,4 +1,4 @@
-import { Button, Form, Label } from "semantic-ui-react";
+import { Button, Divider, Form, Label } from "semantic-ui-react";
 import ModalWrapper from "../../app/common/modals/ModalWrapper";
 import { FieldValues, useForm } from "react-hook-form";
 import { useAppDispatch } from "../../app/store/store";
@@ -7,6 +7,7 @@ import { closeModal } from "../../app/common/modals/modalSlice";
 // import authorization from firebase
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../app/config/firebase";
+import SocialLogin from "./SocialLogin";
 
 export default function LoginForm() {
     // add setError for login errors
@@ -38,7 +39,8 @@ export default function LoginForm() {
     }
 
     return (
-        <ModalWrapper header='Sign into re-vents'>
+        // if buttons are looking too large, add size='mini' to ModalWrapper
+        <ModalWrapper header='Sign into re-vents' size='mini'>
             {/* handleSubmit will pass the values to onSubmit */}
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Input
@@ -82,6 +84,9 @@ export default function LoginForm() {
                     color='teal'
                     content='Login'
                 />
+                {/* add Divider and SocialLogin to LoginForm */}
+                <Divider horizontal>Or</Divider>
+                <SocialLogin />
             </Form>
         </ModalWrapper>
     )
