@@ -5,6 +5,8 @@ import { testSlice } from "../../features/scratch/testSlice";
 import { eventSlice } from "../../features/events/eventSlice";
 import { modalSlice } from "../common/modals/modalSlice";
 import { authSlice } from "../../features/auth/authSlice";
+import { profileSlice } from "../../features/profiles/profileSlice";
+import { photosSlice } from "../../features/profiles/photosSlice";
 
 export const store = configureStore({
     reducer: {
@@ -14,7 +16,10 @@ export const store = configureStore({
         // add modalSlice reducer
         modals: modalSlice.reducer,
         // add authSlice reducer
-        auth: authSlice.reducer
+        auth: authSlice.reducer,
+        // add profileSlice reducer
+        profiles: profileSlice.reducer,
+        photos: photosSlice.reducer
     }
 })
 
