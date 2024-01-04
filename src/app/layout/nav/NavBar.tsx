@@ -5,9 +5,6 @@ import SignedInMenu from "./SignedInMenu";
 // import { useState } from "react";
 import SignedOutButtons from "./SignedOutButtons";
 import { useAppSelector } from "../../store/store";
-import { sampleData } from "../../api/sampleData";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../config/firebase";
 
 // add a type to store the Props
 // doesn't do anything except set the value to true or false
@@ -23,19 +20,21 @@ export default function NavBar() {
     // const [auth, setAuth] = useState(false);
     const { authenticated } = useAppSelector(state => state.auth);
 
-    function seedData() {
-        sampleData.forEach(async event => {
+    // remove seedData after linking users to event
+
+    // function seedData() {
+    //     sampleData.forEach(async event => {
             // spread for rest of the properties
-            const { id, ...rest } = event;
+            // const { id, ...rest } = event;
             // from firebase docs = setDocs, doc and db
             // db gives us access to the database
             // 'events' is the path to the collection
             // id is the document id
-            await setDoc(doc(db, 'events', id), {
-                ...rest
-    })
-})
-}
+//             await setDoc(doc(db, 'events', id), {
+//                 ...rest
+//     })
+// })
+// }
 // then we'll create a button to seed the data
 
 return (
@@ -71,7 +70,9 @@ return (
             {/* check to see if we're in development mode
             when we click the button it will populate data from the events
             into our project on the Cloud Firestore site */}
-            {import.meta.env.DEV && (
+
+            {/* remove seedData button after removing seedData function */}
+            {/* {import.meta.env.DEV && (
                 <MenuItem>
                     <Button
                     onClick={seedData}
@@ -81,7 +82,7 @@ return (
                     />
                 </MenuItem>
 
-            )}
+            )} */}
             {/* remove setAuth from SignedInMenu and SignedOutButtons
                 after creating authSlice.ts */}
             {authenticated ? <SignedInMenu /> : <SignedOutButtons />}

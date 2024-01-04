@@ -11,12 +11,17 @@ category: string
 description: string
 city: string
 venue: string
+// add hostUid for the user who created the event - to link users to the event
+hostUid: string
 hostedBy: string
 hostPhotoURL: string
 // add boolean for cancel
 isCancelled: boolean
 // this is an array
 attendees: Attendee[]
+// add attendeeIds - an array of string - to link users to the event
+// will allow for querying the database for the attendees
+attendeeIds: string[]
 }
 
 // don't forget to export the type/array

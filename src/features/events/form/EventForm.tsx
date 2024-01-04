@@ -10,7 +10,7 @@ import DatePicker from 'react-datepicker';
 import { AppEvent } from "../../../app/types/event";
 // import { doc, setDoc, collection } from "firebase/firestore";
 // import { db } from "../../../app/config/firebase";
-import { Timestamp, updateDoc } from "firebase/firestore";
+import { Timestamp, arrayUnion, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 // add to use with firestore
 import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
@@ -64,6 +64,9 @@ export default function EventForm() {
     // add status - firestore
     const { status } = useAppSelector(state => state.events);
 
+    // give access to currentUser in order to add hostUid for linking users and event
+    const { currentUser } = useAppSelector(state => state.auth);
+
     // const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -100,6 +103,8 @@ export default function EventForm() {
     // create event function
     // we're passing FieldValues because we don't have an event to work with
     async function createEvent(data: FieldValues) {
+        // check to see if we have a currentUser
+        if (!currentUser) return;
         // we need firestore to create an id for us and we want to pass id to a navigate function
         // so that we can redirect to the event we just created, we don't know the id yet
         // therefore, we need to reference the document BEFORE it's been created
@@ -113,9 +118,18 @@ export default function EventForm() {
         const ref = await create({
 
             ...data,
-            hostedBy: 'bob',
-            attendees: [],
-            hostPhotoURL: '',
+            // add hostUid - to link users to event
+            hostUid: currentUser.uid,
+            hostedBy: currentUser.displayName,
+            hostPhotoURL: currentUser.photoURL,
+            // use firestore's arrayUnion to add attendees
+            // arrayUnion will turn a non-array into an array
+            attendees: arrayUnion({
+                id: currentUser.uid,
+                displayName: currentUser.displayName,
+                photoURL: currentUser.photoURL
+            }),
+            attendeesIds: arrayUnion(currentUser.uid),
             date: Timestamp.fromDate(data.date as unknown as Date),
         })
 
