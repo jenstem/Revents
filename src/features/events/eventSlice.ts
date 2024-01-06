@@ -1,11 +1,12 @@
 // import
 // import { act } from "react-dom/test-utils";
-import { sampleData } from "../../app/api/sampleData"
+// import { sampleData } from "../../app/api/sampleData"
 import { AppEvent } from "../../app/types/event"
 // import { createSlice } from "@reduxjs/toolkit";
 import { Timestamp } from "firebase/firestore";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { createGenericSlice, GenericState, GenericActions } from "../../app/store/genericSlice";
+import { auth } from "../../app/config/firebase";
 
 // create type of State
 type State = {
@@ -53,7 +54,14 @@ const initialState: State = {
                 Array.isArray(events) ? eventArray = events : eventArray.push(events)
                 // now that we created eventArray, we'll need to map over that instead of just events
                 const mapped = eventArray.map((e: any) => {
-                    return { ...e, date: (e.date as Timestamp).toDate().toISOString() }
+                    return {
+                        ...e,
+                        date: (e.date as Timestamp).toDate().toISOString(),
+                        // add isHost
+                        // auth gives us access to currentUser
+                        isHost: auth.currentUser?.uid === e.hostUid,
+                        isGoing: e.attendeeIds.includes(auth.currentUser?.uid),
+                    }
                 });
                 return { payload: mapped }
             }

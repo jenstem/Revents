@@ -22,6 +22,9 @@ attendees: Attendee[]
 // add attendeeIds - an array of string - to link users to the event
 // will allow for querying the database for the attendees
 attendeeIds: string[]
+// add isHost - boolean to check if the user is the host of the event
+isHost?: boolean
+isGoing?: boolean
 }
 
 // don't forget to export the type/array
