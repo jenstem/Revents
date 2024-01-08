@@ -12,7 +12,8 @@ export default function ProfileContent({profile}: Props) {
     const panes = [
         {menuItem: 'About', render: () => <ProfileAbout profile={profile} />},
         {menuItem: 'Photos', render: () => <ProfilePhotos profile={profile} />},
-        {menuItem: 'Events', render: () => <ProfileEvents />},
+        // pass profile into profileEvents
+        {menuItem: 'Events', render: () => <ProfileEvents profile={profile} />},
         {menuItem: 'Followers', render: () => <Tab.Pane>Followers</Tab.Pane>},
         {menuItem: 'Following', render: () => <Tab.Pane>Following</Tab.Pane>},
     ]
