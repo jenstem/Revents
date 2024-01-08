@@ -35,7 +35,6 @@ export default function EventDetailedPage() {
             </Grid.Column>
             {/* left hand side */}
             <Grid.Column width={6}>
-                {/* Pass down event to this EventDetailedSideBar as well */}
                 <EventDetailedSideBar event={event} />
             </Grid.Column>
         </Grid>
