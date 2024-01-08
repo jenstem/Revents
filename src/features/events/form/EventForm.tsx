@@ -1,129 +1,53 @@
 import { Button, Form, Header, Segment } from "semantic-ui-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../../../app/store/store";
-// import { createEvent, updateEvent } from "../eventSlice";
-// import { createId } from "@paralleldrive/cuid2";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { categoryOptions } from "./categoryOptions";
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
 import { AppEvent } from "../../../app/types/event";
-// import { doc, setDoc, collection } from "firebase/firestore";
-// import { db } from "../../../app/config/firebase";
 import { Timestamp, arrayUnion, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
-// add to use with firestore
 import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
 import { useEffect } from "react";
 import { actions } from "../eventSlice";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 
-
-// import { AppEvent } from "../../../app/types/event";
-// import { createId } from "@paralleldrive/cuid2";
-
-
-// do NOT need when using router
-// type Props = {
-//     setFormOpen: (value: boolean) => void;
-//     addEvent: (event: AppEvent) => void;
-//     // need to specify if it's an AppEvent or null, otherwise you'll get errors with AppEvent in code
-//     selectedEvent: AppEvent | null
-//     // add updateEvent to Props
-//     updateEvent: (event: AppEvent) => void;
-// }
-// add updateEvent to Props
-// remove props when using router
-// export default function EventForm({ setFormOpen, addEvent, selectedEvent, updateEvent }: Props) {
 export default function EventForm() {
-
-    // bring in firestore hook
-    // add create and update from useFirestore.ts
     const { loadDocument, create, update } = useFireStore('events');
-
-    // this comes from react-hook-form
-    // we need control for the Controller and dropdown option for category
     const { register, handleSubmit, control, setValue, formState: { errors, isValid, isSubmitting } } = useForm({
         mode: 'onTouched',
         defaultValues: async () => {
-            // received error - Invalid Time value - fix with this
             if (event) return { ...event, date: new Date(event.date) }
         }
     });
-
-    // add useParams hook
-    // need to change const { id } = use Params() to let { id } = useParams()
-    // we need to change the id to let because we'll be updating the id
-    // we can change it back to const because we're no longer updating the id
     const { id } = useParams();
-
-    // change events to data - firestore
-    // const event = useAppSelector(state => state.events.events.find(e => e.id === id));
     const event = useAppSelector(state => state.events.data.find(e => e.id === id));
-
-    // add status - firestore
     const { status } = useAppSelector(state => state.events);
-
-    // give access to currentUser in order to add hostUid for linking users and event
     const { currentUser } = useAppSelector(state => state.auth);
-
-    // const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    // add useEffect hook - firestore
     useEffect(() => {
         if (!id) return;
-        // if we do have an id
         loadDocument(id, actions)
     }, [id, loadDocument])
 
     // update event function
     async function updateEvent(data: AppEvent) {
         if (!event) return;
-        // doc comes from firestore, db is database, collection you're going to update, id of event
-
-        // remove const docRef once imported CRUD functions from useFirestore.ts
-        // const docRef = doc(db, 'events', event.id);
-
-        // updateDoc is from firestore
-        // change updateDoc to update, and docRef to data.id
-        // once imported CRUD functions from useFirestore.ts
-        // await updateDoc(docRef, {
         await update(data.id, {
-
-            // specify data you want to update, spread the data
             ...data,
-            // we need to turn date into a firestore Timestamp
-            // you can't go from string to type Date, so we need to go from string to Date to Timestamp
-            // so we add in "as unknown" and then "as Date"
-            // must use "as unknown" otherwise it won't accept it
             date: Timestamp.fromDate(data.date as unknown as Date)
         })
     }
-    // create event function
-    // we're passing FieldValues because we don't have an event to work with
+
     async function createEvent(data: FieldValues) {
-        // check to see if we have a currentUser
         if (!currentUser) return;
-        // we need firestore to create an id for us and we want to pass id to a navigate function
-        // so that we can redirect to the event we just created, we don't know the id yet
-        // therefore, we need to reference the document BEFORE it's been created
-        // can use doc and setDoc() to create a document with an auto-generated id
-
-        // remove const newEventRef once imported CRUD functions from useFirestore.ts
-        // const newEventRef = doc(collection(db, 'events'));
-
-        // revise to use CRUD from useFirestore.ts
-        // await setDoc(newEventRef, {
         const ref = await create({
-
             ...data,
-            // add hostUid - to link users to event
             hostUid: currentUser.uid,
             hostedBy: currentUser.displayName,
             hostPhotoURL: currentUser.photoURL,
-            // use firestore's arrayUnion to add attendees
-            // arrayUnion will turn a non-array into an array
             attendees: arrayUnion({
                 id: currentUser.uid,
                 displayName: currentUser.displayName,
@@ -132,14 +56,10 @@ export default function EventForm() {
             attendeesIds: arrayUnion(currentUser.uid),
             date: Timestamp.fromDate(data.date as unknown as Date),
         })
-
-        // return ref instead of newEventRef - CRUD from useFirestore.ts
-        // return newEventRef;
         return ref;
     }
 
     // cancel event function
-    // redundant to add a try/catch block since update already has it
     async function handleCancelToggle(event: AppEvent) {
         await update(event.id, {
             isCancelled: !event.isCancelled
@@ -147,33 +67,6 @@ export default function EventForm() {
         toast.success(`Event has been ${event.isCancelled ? 'uncancelled' : 'cancelled'}`)
     }
 
-    // this comes from react-hook-form
-    // we need control for the Controller and dropdown option for category
-    // const { register, handleSubmit, control, setValue, formState: { errors, isValid, isSubmitting } } = useForm({
-    //     mode: 'onTouched'
-    // });
-
-    // create an object we can pass into our useState
-    // ?? = if selected event is null use what's inside this const
-    // do NOT need selectedEvent when using router
-    // const initialValues = selectedEvent ?? {
-    // we replace this with event ?? meaning use event otherwise use the following
-    // with react-hook-form we don't need to use initialValues
-    // const initialValues = event ?? {
-    //     title: '',
-    //     category: '',
-    //     description: '',
-    //     city: '',
-    //     venue: '',
-    //     date: ''
-    // }
-
-    // state
-    // with react-hook-form we don't need to use state
-    // const [values, setValues] = useState(initialValues);
-
-
-    // what will happen when we submit our form
     async function onSubmit(data: FieldValues) {
         try {
             if (event) {
@@ -181,13 +74,9 @@ export default function EventForm() {
                 navigate(`/events/${event.id}`);
             } else {
                 const ref = await createEvent(data);
-
-                // if adding CRUD from useFirestore.ts gives ref an error
-                // just add a ? after ref
                 navigate(`/events/${ref?.id}`);
             }
         } catch (error: any) {
-            // add toast error message
             toast.error(error.message);
             console.log(error.message);
         }
@@ -196,80 +85,28 @@ export default function EventForm() {
     // check to see if we're loading - firestore
     if (status === 'loading') return <LoadingComponent />
 
-
-
-    // remove any props you're no longer using when using router
-    // check to see if there's anything inside selectedEvent
-    // if we do have a selectedEvent then we want to update the event
-    // remove this code because we created a function for updateEvent and createEvent above instead
-    // id = id ?? createId();
-    // event
-    // need to add date: data.date.toString() to change the date from a date object to a string
-    // dispatching update to store and then we see that update in our browser
-    // ? dispatch(updateEvent({ ...event, ...data, date: data.date.toString() }))
-    // : dispatch(createEvent({ ...data, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '', date: data.date.toString() }));
-    // Above we changed ...values to ...data because we're using react-hook-form and we're no longer using values
-    // event
-    // ? dispatch(updateEvent({ ...event, ...values }))
-    // : dispatch(createEvent({ ...values, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '' }));
-    // we want to navigate to the event we just updated or created
-    // navigate(`/events/${id}`);
-    // }
-
-    // NO LONGER need this function, register with react-hook-form takes its place
-    // function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    //     const { name, value } = e.target;
-    //     // we want to spread the values and then set the name to the value of just update one value
-    //     // ...values gives us all values and [name]: value specifies which value to update
-    //     setValues({ ...values, [name]: value })
-    // }
-
     return (
         <Segment clearing>
-            {/* : = or */}
-            {/* remove props you aren't using with router */}
-            {/* <Header content={selectedEvent ? 'Update Event' : 'Create Event'} /> */}
-            {/* replace selectedEvent with event because of useParam hook */}
-            {/* sub = subheader */}
             <Header content={'Event details'} sub color='teal' />
-            {/* we want to use the react-hook-form onSubmit */}
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Input
                     placeholder='Event Title'
                     defaultValue={event?.title || ''}
-                    // use {required: true} for a required field
                     {...register('title', { required: true })}
-                    // this will notify users that the title is required
                     error={errors.title && 'Title is required'}
-                // we'll use the name and value to update the state
-                // name='title'
-                // this is a change event for an HTML element
-                // onChange={e => handleInputChange(e)}
                 />
-                {/* Form.Select is a dropdown for a form */}
-                {/* Form.TextArea is a text area for a form
-                uses Integrating Controlled Inputs, because it's controlled we
-                need rules instead of register */}
-                {/* only need 1 default value for the dropdown, if you have
-                a second one in the Form.Select take it out and leave
-                the one in the Controller */}
+
                 <Controller
                     name='category'
                     control={control}
                     rules={{ required: 'Category is required' }}
-                    // ? = optional
                     defaultValue={event?.category}
                     render={({ field }) => (
                         < Form.Select
                             options={categoryOptions}
                             placeholder='Category'
                             clearable
-                            // defaultValue={event?.category || ''}
                             {...field}
-                            // works with setValue
-                            // use onChange to update the state, so you don't get undefined for your category
-                            // put a _ for the first parameter because we don't need it, we only need the second parameter
-                            // we use the _ as a placeholder
                             onChange={(_, d) => setValue('category', d.value, { shouldValidate: true })}
                             error={errors.category && errors.category.message}
                         />
@@ -296,7 +133,7 @@ export default function EventForm() {
                     {...register('venue', { required: 'Venue is required' })}
                     error={errors.venue && errors.venue.message}
                 />
-                {/* Use Form.Field so we get the styling */}
+
                 <Form.Field>
                     <Controller
                         name='date'
@@ -315,16 +152,7 @@ export default function EventForm() {
                         )}
                     />
                 </Form.Field>
-                {/* <Form.Input
-                    type='date'
-                    placeholder='Date'
-                    defaultValue={event?.date || ''}
-                    {...register('date', { required: 'Date is required' })}
-                    error={errors.date && errors.date.message}
-                /> */}
 
-{/* add handleCancelToggle to onClick
-    Button will only show if event has been created */}
                 {event && (
                     <Button
                         type='button'
@@ -336,10 +164,6 @@ export default function EventForm() {
                 )}
 
                 <Button loading={isSubmitting} type='submit' disabled={!isValid} floated='right' positive content='Submit' />
-                {/* the onClick is set to false because we want to close the form
-                    or rather have the form disappear when we click the cancel button */}
-                {/* remove onClick when using router */}
-                {/* <Button onClick={() => setFormOpen(false)} type='button' floated='right' content='Cancel' /> */}
                 <Button disabled={isSubmitting} as={Link} to='/events' type='button' floated='right' content='Cancel' />
             </Form>
         </Segment>

@@ -1,7 +1,6 @@
 import { Grid, Header, Tab, Button, Card, Image } from "semantic-ui-react";
 import { Profile } from "../../app/types/profile";
 import { useEffect, useState } from "react";
-import ProfileForm from "./ProfileForm";
 import { auth, storage } from "../../app/config/firebase";
 import PhotoUpload from "./PhotoUpload";
 import { useAppSelector } from "../../app/store/store";
@@ -23,15 +22,14 @@ export default function ProfilePhotos({ profile }: Props) {
     const isCurrentUser = auth.currentUser?.uid === profile.id;
     const { data: photos, status } = useAppSelector(state => state.photos);
     const { loadCollection, remove } = useFireStore(`profiles/${profile.id}/photos`);
-    // add update function from useFireStore for setting main profile picture
+
     const { update } = useFireStore('profiles');
 
     useEffect(() => {
-        // actions from photosSlice.ts
         loadCollection(actions);
     }, [loadCollection])
 
-    // create to set main profile picture
+    // Set main profile picture
     async function handleSetMain(photo: Photo) {
         await update(profile.id, {
             photoURL: photo.url
@@ -45,7 +43,6 @@ export default function ProfilePhotos({ profile }: Props) {
     // delete a profile picture
     async function handleDeletePhoto(photo: Photo) {
         try {
-            // delete from storage
             const storageRef = ref(storage, `${profile.id}/user_images/${photo.id}`);
             await deleteObject(storageRef);
             await remove(photo.id);
@@ -55,7 +52,6 @@ export default function ProfilePhotos({ profile }: Props) {
     }
 
     return (
-        // add loading message to Tab.Pane
         <Tab.Pane loading={status === 'loading'}>
             <Grid>
                 <Grid.Column width={16}>
@@ -69,20 +65,16 @@ export default function ProfilePhotos({ profile }: Props) {
                         />}
                 </Grid.Column>
                 <Grid.Column width={16}>
-                    {/* Add photoupload here with Props from PhotoUpload.tsx*/}
                     {editMode ? <PhotoUpload profile={profile} setEditMode={setEditMode} /> : (
                         <Card.Group itemsPerRow={5}>
                             {photos.map(photo => (
-                                // because we're mapping over photos, we'll need an unique key
                                 <Card key={photo.id}>
-                                    {/*  set source = photo.url */}
                                     <Image src={photo.url} />
                                     {isCurrentUser &&
                                         <Button.Group>
                                             <Button
                                                 basic
                                                 color='green'
-                                                // don't let them select the main photo if it's already the main photo
                                                 disabled={photo.url === profile.photoURL}
                                                 onClick={() => handleSetMain(photo)}
                                                 >Main</Button>

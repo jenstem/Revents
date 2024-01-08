@@ -20,7 +20,6 @@ export default function ProfileContent({profile}: Props) {
         <Tab
             menu={{ fluid: true, vertical: true }}
             menuPosition="right"
-            // pass the panes array to the panes prop
             panes={panes}
         />
     )

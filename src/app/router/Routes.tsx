@@ -14,13 +14,9 @@ export const router = createBrowserRouter([
         children: [
             { path: '/events', element: <EventDashboard /> },
             { path: '/events/:id', element: <EventDetailedPage /> },
-            // We need to give /createEvent a key with a unique id key='create', so there's a difference between
-            // createEvent and manageEvent
             { path: '/manage/:id', element: <EventForm /> },
-            // Add profile page path
             { path: '/profiles/:id', element: <ProfilePage /> },
             { path: '/createEvent', element: <EventForm key='create' /> },
-            // add account page for user's profile
             { path: '/account', element: <AccountPage /> },
             { path: '/scratch', element: <Scratch /> },
         ]

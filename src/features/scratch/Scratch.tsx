@@ -4,7 +4,6 @@ import { decrement, increment, incrementByAmount } from "./testSlice";
 import { openModal } from "../../app/common/modals/modalSlice";
 
 export default function Scratch() {
-    // specify which slice, so we put state.test
     const {data} = useAppSelector(state => state.test)
     const dispatch = useAppDispatch();
 

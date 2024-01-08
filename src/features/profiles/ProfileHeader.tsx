@@ -30,7 +30,7 @@ export default function ProfileHeader({profile}: Props) {
                         <Statistic label='Following' value={5} />
                     </Statistic.Group>
                     <Divider />
-                    {/* When you reveal content, what you want to show is put in the Reveal.Content */}
+
                     <Reveal animated='move'>
                         <Reveal.Content visible style={{ width: '100%' }}>
                             <Button

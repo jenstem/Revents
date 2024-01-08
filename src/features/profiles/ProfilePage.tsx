@@ -19,9 +19,7 @@ export default function ProfilePage() {
         if (id) loadDocument(id, actions)
     }, [id, loadDocument]);
 
-    // if status is loading then show loading component
     if (status === 'loading') return <LoadingComponent content='Loading profile...' />
-    // if profile is not found then show not found
     if (!profile) return <h2>Not found</h2>
 
     return (

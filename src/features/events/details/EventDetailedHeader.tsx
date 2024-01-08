@@ -2,12 +2,11 @@ import { Button, Header, Image, Item, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { AppEvent } from '../../../app/types/event';
 
-// Add Props and set event = to AppEvent
 type Props = {
     event: AppEvent
 
 }
-// pass event as Props
+
 export default function EventDetailedHeader({ event }: Props) {
     const eventImageStyle = {
         filter: 'brightness(30%)'
@@ -48,11 +47,6 @@ export default function EventDetailedHeader({ event }: Props) {
             </Segment>
 
             <Segment attached="bottom" clearing>
-                {/* remove extra buttons for adding attendees to events*/}
-                {/* <Button>Cancel My Place</Button>
-        <Button color="teal">JOIN THIS EVENT</Button> */}
-
-                {/* replace extra buttons with this */}
                 {event.isHost ? (
                     <Button as={Link} to={`/manage/${event.id}`} color="orange" floated="right">
                         Manage Event

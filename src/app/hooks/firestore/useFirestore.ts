@@ -10,15 +10,9 @@ type ListenerState = {
     unsubscribe?: () => void
 }
 
-// every hook has to start with use
-// <T extends DocumentData> - add "extends DocumentData" if you get an error when using data
-// in a function below that mentions T
 export const useFireStore = <T extends DocumentData>(path: string) => {
-    // store listener references so we can unsubscribe from them
-    // useRef that lets you make changes and you won't have to re-render
-    // use Ref will persist for the full lifetime of the component
     const listenersRef = useRef<ListenerState[]>([]);
-    // useEffect is a hook that lets you unsubscribe from a listener
+
     useEffect(() => {
         let listenerRefValue: ListenerState[] | null = null;
 
@@ -40,8 +34,6 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
 
     const dispatch = useAppDispatch();
 
-    // function that listens to our collection
-    // useCallback is a React hook that lets you memoize a function
     const loadCollection = useCallback((actions: GenericActions<T>) => {
         dispatch(actions.loading());
 
@@ -76,7 +68,6 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
         // create listener
         const listener = onSnapshot(docRef, {
             next: doc => {
-                // check to see if doc exists
                 if (!doc.exists) {
                     dispatch(actions.error('Document does not exist'));
                     return;
@@ -85,18 +76,13 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
             }
         })
         listenersRef.current.push({ name: path + '/' + id, unsubscribe: listener })
-        // add dependencies
     }, [dispatch, path])
 
     // create a document
     const create = async (data: T) => {
         try {
             const ref = doc(collection(db, path));
-            // add "extends DocumentData" to "export const useFireStore"
-            // if you get an error when using data
-            // in a function that mentions T
             await setDoc(ref, data);
-            // continue to use ref so that we can get the id of the document
             return ref;
         } catch (error: any) {
             console.log(error);
@@ -116,7 +102,6 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
     }
 
     // delete a document
-    // can NOT use delete as a function name
     const remove = async (id: string) => {
         try {
             return await deleteDoc(doc(db, path, id));
