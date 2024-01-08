@@ -13,11 +13,8 @@ type Props = {
 }
 
 export default function EventDetailedHeader({ event }: Props) {
-    // bring in user
     const { currentUser } = useAppSelector(state => state.auth);
-    // add loading status
     const [loading, setLoading] = useState(false);
-    // bring in firestore hook
     const { update } = useFireStore('events');
     const eventImageStyle = {
         filter: 'brightness(30%)'
@@ -42,14 +39,12 @@ export default function EventDetailedHeader({ event }: Props) {
         if (event.isGoing) {
             const attendee = event.attendees.find(x => x.id === currentUser.uid);
             await update(event.id, {
-                // arrayRemove is a firebase function
                 attendees: arrayRemove(attendee),
                 attendeeIds: arrayRemove(currentUser.uid)
             })
             setLoading(false);
         } else {
             await update(event.id, {
-                // arrayUnion is a firebase function
                 attendees: arrayUnion({
                     id: currentUser.uid,
                     displayName: currentUser.displayName,
@@ -95,7 +90,6 @@ export default function EventDetailedHeader({ event }: Props) {
                     <Button
                         content={event.isGoing ? 'Cancel My Place' : 'JOIN THIS EVENT'}
                         color={event.isGoing ? 'grey' : 'teal'}
-                        // add an onClick event and loading
                         onClick={toggleAttendance}
                         loading={loading}
                     />
