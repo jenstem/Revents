@@ -53,10 +53,14 @@ export default function EventDetailedChat({ eventId }: Props) {
             >
                 <Header>Chat about this event</Header>
             </Segment>
-
-            <Segment attached>
-                <Comment.Group>
-                    {createCommentTree(comments).map(comment => (
+            {/* Add scroll to the chat */}
+            <Segment attached style={{height: 400, overflowY: 'scroll'}}>
+                {/* Move ChatForm to the top */}
+                <ChatForm eventId={eventId} />
+                {/* Add padding and margin to Comment.Group */}
+                <Comment.Group style={{paddingBottom: 0, marginBottom: 0}}>
+                    {/* Add reverse to the comment tree */}
+                    {createCommentTree(comments).reverse().map(comment => (
                         <Comment key={comment.id}>
                             <Comment.Avatar src={comment.photoURL || "/user.png"} />
                             <Comment.Content>
@@ -121,7 +125,7 @@ export default function EventDetailedChat({ eventId }: Props) {
                     ))}
 
                 </Comment.Group>
-                <ChatForm eventId={eventId} />
+
             </Segment>
         </>
 
