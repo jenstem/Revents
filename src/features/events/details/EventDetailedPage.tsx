@@ -11,6 +11,7 @@ import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useFireStore } from '../../../app/hooks/firestore/useFirestore';
 
 
+
 export default function EventDetailedPage() {
     const { id } = useParams();
     const event = useAppSelector(state => state.events.data.find(e => e.id === id));
@@ -23,6 +24,7 @@ export default function EventDetailedPage() {
     }, [id, loadDocument])
 
     if (status === 'loading') return <LoadingComponent />
+
     if (!event) return <h2>Event not found</h2>
 
     return (
@@ -31,7 +33,7 @@ export default function EventDetailedPage() {
             <Grid.Column width={10}>
                 <EventDetailedHeader event={event}/>
                 <EventDetailedInfo event={event}/>
-                <EventDetailedChat />
+                <EventDetailedChat eventId={event.id} />
             </Grid.Column>
             {/* left hand side */}
             <Grid.Column width={6}>
