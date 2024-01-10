@@ -1,4 +1,3 @@
-
 import { PayloadAction } from "@reduxjs/toolkit";
 import { GenericState, createGenericSlice } from "../../app/store/genericSlice";
 import { Profile } from "../../app/types/profile";
@@ -35,6 +34,16 @@ export const profileSlice = createGenericSlice({
                 });
                 return {payload: mapped}
             }
+        },
+
+        setFollowing: (state, action) => {
+            state.data = state.data.map(profile => {
+                if (profile.id !== action.payload.id) return profile;
+                else {
+                    profile.isFollowing = action.payload.isFollowing;
+                    return profile;
+                }
+            })
         }
     }
 })
