@@ -19,7 +19,10 @@ export const profileSlice = createGenericSlice({
     reducers: {
         success: {
             reducer: (state, action: PayloadAction<Profile[]>) => {
-                state.data = action.payload;
+                state.data = action.payload.map(profile => {
+                    const prevProfile = state.data.find(x => x.id === profile.id);
+                    return prevProfile ? {...prevProfile, ...profile} : profile;
+                })
                 state.status = 'finished'
             },
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useAppDispatch } from '../../store/store';
 import { GenericActions } from '../../store/genericSlice';
-import { collection, DocumentData, onSnapshot, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, DocumentData, onSnapshot, doc, setDoc, updateDoc, deleteDoc, QueryDocumentSnapshot } from 'firebase/firestore';
 import { db } from "../../config/firebase";
 import { toast } from 'react-toastify';
 import { CollectionOptions } from "./types";
@@ -14,6 +14,8 @@ type ListenerState = {
 
 export const useFireStore = <T extends DocumentData>(path: string) => {
     const listenersRef = useRef<ListenerState[]>([]);
+    const lastDocRef = useRef<QueryDocumentSnapshot | null>(null);
+    const hasMore = useRef(true);
 
     useEffect(() => {
         let listenerRefValue: ListenerState[] | null = null;
@@ -35,20 +37,32 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
     }, []);
 
     const dispatch = useAppDispatch();
+
     const loadCollection = useCallback((actions: GenericActions<T>, options?: CollectionOptions) => {
+        if (options?.reset) {
+            lastDocRef.current = null;
+            hasMore.current = true;
+        }
+
         dispatch(actions.loading());
-        const query = getQuery(path, options);
+
+        const query = getQuery(path, options, lastDocRef);
 
         const listener = onSnapshot(query, {
             next: querySnapshot => {
                 const data: DocumentData[] = [];
                 if (querySnapshot.empty) {
+                    hasMore.current = false;
                     dispatch(actions.success([] as unknown as T))
                     return;
                 }
                 querySnapshot.forEach(doc => {
                     data.push({ id: doc.id, ...doc.data() })
                 })
+                if (options?.pagination && options.limit) {
+                    lastDocRef.current = querySnapshot.docs[querySnapshot.docs.length - 1];
+                    hasMore.current = !(querySnapshot.docs.length < options.limit);
+                }
                 dispatch(actions.success(data as unknown as T))
             },
             error: error => {
@@ -61,7 +75,6 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
     }, [dispatch, path])
 
     const loadDocument = useCallback((id: string, actions: GenericActions<T>) => {
-        // turn on loading indicator
         dispatch(actions.loading());
         const docRef = doc(db, path, id);
 
@@ -121,5 +134,5 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
         }
     }
 
-    return { loadCollection, loadDocument, create, update, remove, set }
+    return { loadCollection, loadDocument, create, update, remove, set, hasMore }
 }

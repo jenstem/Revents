@@ -2,9 +2,10 @@ import { createSlice, PayloadAction, SliceCaseReducers, ValidateSliceCaseReducer
 import { ActionCreatorWithoutPayload, ActionCreatorWithPreparedPayload, ActionCreatorWithPayload } from '@reduxjs/toolkit/src/createAction'
 
 export type GenericState<T> = {
-    data: T
+    data: T | [],
     status: 'loading' | 'finished' | 'error'
-    errors?: any
+    errors?: any,
+    loadedInitial?: boolean
 }
 
 export const createGenericSlice = <
@@ -35,6 +36,11 @@ export const createGenericSlice = <
             error: (state, action) => {
                 state.errors = action.payload
                 state.status = 'error'
+            },
+
+            reset: (state) => {
+                state.data = [];
+                state.loadedInitial = false;
             },
             ...reducers,
         },

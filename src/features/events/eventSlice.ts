@@ -6,11 +6,13 @@ import { createGenericSlice, GenericState, GenericActions } from "../../app/stor
 import { auth } from "../../app/config/firebase";
 
 type State = {
-    data: AppEvent[]
+    data: AppEvent[],
+    loadedInitial: boolean
 }
 
 const initialState: State = {
-    data: []
+    data: [],
+    loadedInitial: false
 }
 
     export const eventSlice = createGenericSlice({
@@ -20,8 +22,9 @@ const initialState: State = {
     reducers: {
         success: {
             reducer: (state, action: PayloadAction<AppEvent[]>) => {
-                state.data = action.payload
+                state.data = [...state.data, ...action.payload]
                 state.status = 'finished'
+                state.loadedInitial = true
             },
 
             prepare: (events: any) => {
@@ -37,9 +40,8 @@ const initialState: State = {
                 });
                 return { payload: mapped }
             }
-        },
+        }
     }
-}
-)
+})
 
 export const actions = eventSlice.actions as GenericActions<AppEvent[]>
