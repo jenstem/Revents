@@ -53,7 +53,7 @@ export default function EventForm() {
                 displayName: currentUser.displayName,
                 photoURL: currentUser.photoURL
             }),
-            attendeesIds: arrayUnion(currentUser.uid),
+            attendeeIds: arrayUnion(currentUser.uid),
             date: Timestamp.fromDate(data.date as unknown as Date),
         })
         return ref;
