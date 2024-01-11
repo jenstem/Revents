@@ -53,6 +53,7 @@ export async function batchSetPhoto(photoURL: string) {
     }
     const profileDocRef = doc(db, 'profiles', currentUser?.uid as string);
     const eventDocQuery = getQuery('event', eventQueryOptions);
+    const followingDocQuery = getQuery(`profiles/${currentUser?.uid}/following`)
     const batch = writeBatch(db);
 
     try {
@@ -73,6 +74,14 @@ export async function batchSetPhoto(photoURL: string) {
                     }
                     return attendee
                 })
+            })
+        });
+
+        const followingQuerysnap = await getDocs(followingDocQuery);
+        followingQuerysnap.docs.forEach(followDoc => {
+            const followerDocRef = doc(db, `profiles/${followDoc.id}/followers`, currentUser?.uid as string);
+            batch.update(followerDocRef, {
+                photoURL
             })
         })
         await batch.commit();
