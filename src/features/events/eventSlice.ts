@@ -22,7 +22,7 @@ const initialState: State = {
     reducers: {
         success: {
             reducer: (state, action: PayloadAction<AppEvent[]>) => {
-                state.data = [...state.data, ...action.payload]
+                state.data = removeDuplicates([...state.data, ...action.payload])
                 state.status = 'finished'
                 state.loadedInitial = true
             },
@@ -45,3 +45,9 @@ const initialState: State = {
 })
 
 export const actions = eventSlice.actions as GenericActions<AppEvent[]>
+
+function removeDuplicates(events: AppEvent[]) {
+    return Array.from(new Set(events
+        .map(x => x.id)))
+        .map(id => events.find(a => a.id === id)) as AppEvent[]
+}

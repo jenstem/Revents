@@ -26,6 +26,8 @@ export default function EventDashboard() {
             sort: { attribute: 'date', order: 'asc' },
             pagination: true,
             reset,
+            // add get: true to get the data from the server
+            get: true
         })
     }, [loadCollection, query])
 
