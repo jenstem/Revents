@@ -1,11 +1,10 @@
-import { Button, Grid } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 import EventList from "./EventList";
 import { useAppSelector, useAppDispatch } from "../../../app/store/store";
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { actions } from "../eventSlice";
 import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
 import EventFilters from "./EventFilters";
-import { useState } from "react";
 import { QueryOptions } from '../../../app/hooks/firestore/types';
 import EventListItemPlaceholder from "./EventListItemPlaceholder";
 
@@ -26,7 +25,6 @@ export default function EventDashboard() {
             sort: { attribute: 'date', order: 'asc' },
             pagination: true,
             reset,
-            // add get: true to get the data from the server
             get: true
         })
     }, [loadCollection, query])
@@ -35,7 +33,7 @@ export default function EventDashboard() {
         loadEvents(true);
 
         return () => {
-            dispatch(actions.reset())
+            dispatch(actions.reset());
         }
     }, [loadEvents, dispatch])
 
@@ -46,25 +44,21 @@ export default function EventDashboard() {
     return (
         <Grid>
             <Grid.Column width={10}>
-                {loadedInitial ? (
+                {!loadedInitial ? (
                     <>
                         <EventListItemPlaceholder />
                         <EventListItemPlaceholder />
                     </>
                 ) : (
                     <>
-                        <EventList events={events} />
-                        <Button
-                            disabled={!hasMore.current}
-                            content='Load more'
-                            color='green'
-                            onClick={loadMore}
+                        <EventList
+                            events={events}
+                            hasMore={hasMore.current}
+                            loadMore={loadMore}
                             loading={status === 'loading'}
-                            />
+                        />
                     </>
-
                 )}
-                <EventList events={events} />
             </Grid.Column>
             <Grid.Column width={6}>
                 <div className='ui fixed top sticky' style={{ top: 98, width: 405 }}>
