@@ -1,9 +1,11 @@
-import { FieldValue, FieldValues, useForm } from 'react-hook-form'
+import { FieldValues, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Form, Loader } from 'semantic-ui-react';
 import { KeyboardEvent } from 'react';
 import { push, ref, set } from 'firebase/database';
 import { auth, fb } from '../../../app/config/firebase';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../../app/store/store';
 
 type Props = {
     eventId: string
@@ -17,7 +19,12 @@ export default function ChatForm({eventId, parentId, setReplyForm}: Props) {
         defaultValues: { comment: '' }
     })
 
+    const { authenticated } = useAppSelector(state => state.auth);
+    const navigate = useNavigate();
+    const location = useLocation();
+
     async function onSubmit(data: FieldValues) {
+        if (!authenticated) return navigate('/unauthorized', { state: { from: location.pathname } });
         try {
             const chatRef = ref(fb, `chat/${eventId}`);
             const newChatRef = push(chatRef);

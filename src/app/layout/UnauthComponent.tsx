@@ -7,6 +7,8 @@ export default function UnauthComponent() {
     const dispatch = useAppDispatch();
     const location = useLocation();
     const navigate = useNavigate();
+    const from = location.state?.from || '/events'
+
     return (
         <Segment>
             <Grid columns={2} stackable textAlign='center'>
@@ -23,13 +25,13 @@ export default function UnauthComponent() {
                             <Button
                                 color='teal'
                                 content='Login'
-                                onClick={() => dispatch(openModal({type: 'LoginForm'}, data: {location} ))}
+                                onClick={() => dispatch(openModal({type: 'LoginForm'}, data: { from } ))}
                             />
                             <Button.Or />
                             <Button
                                 color='green'
                                 content='Register'
-                                onClick={() => dispatch(openModal({type: 'RegisterForm'}, data: {location} ))}
+                                onClick={() => dispatch(openModal({type: 'RegisterForm'}, data: { from } ))}
                             />
                         </Button.Group>
                     </Grid.Column>
@@ -38,8 +40,8 @@ export default function UnauthComponent() {
                             <Icon name='angle left' />
                             Go Back
                             <Button
+                                style={{marginTop: 10}}
                                 content= 'Cancel'
-                                // this will take the user back to their previous page, -1
                                 onClick={() => navigate(-1)}
                             />
                         </Header>
