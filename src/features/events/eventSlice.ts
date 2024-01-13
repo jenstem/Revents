@@ -31,6 +31,7 @@ const initialState: State = {
                 let eventArray: AppEvent[] = [];
                 Array.isArray(events) ? eventArray = events : eventArray.push(events)
                 const mapped = eventArray.map((e: any) => {
+                    console.log(e)
                     return {
                         ...e,
                         date: (e.date as Timestamp).toDate().toISOString(),
