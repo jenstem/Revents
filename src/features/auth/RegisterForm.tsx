@@ -3,7 +3,7 @@ import ModalWrapper from "../../app/common/modals/ModalWrapper";
 import { FieldValues, useForm } from "react-hook-form";
 import { useAppDispatch } from "../../app/store/store";
 import { closeModal } from "../../app/common/modals/modalSlice";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../app/config/firebase";
 import { signIn } from "./authSlice";
 import { useFireStore } from "../../app/hooks/firestore/useFirestore";

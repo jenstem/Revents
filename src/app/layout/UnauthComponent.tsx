@@ -1,7 +1,7 @@
 import { Button, Divider, Grid, Header, Icon, Segment } from "semantic-ui-react";
 import { useAppDispatch } from "../store/store";
 import { openModal } from "../common/modals/modalSlice";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function UnauthComponent() {
     const dispatch = useAppDispatch();
@@ -10,7 +10,7 @@ export default function UnauthComponent() {
     const from = location.state?.from || '/events'
 
     return (
-        <Segment>
+        <Segment placeholder>
             <Grid columns={2} stackable textAlign='center'>
                 <Divider vertical>Or</Divider>
 
@@ -25,13 +25,13 @@ export default function UnauthComponent() {
                             <Button
                                 color='teal'
                                 content='Login'
-                                onClick={() => dispatch(openModal({type: 'LoginForm'}, data: { from } ))}
+                                onClick={() => dispatch(openModal({type: 'LoginForm', data: { from }}))}
                             />
                             <Button.Or />
                             <Button
                                 color='green'
                                 content='Register'
-                                onClick={() => dispatch(openModal({type: 'RegisterForm'}, data: { from } ))}
+                                onClick={() => dispatch(openModal({type: 'RegisterForm', data: { from }}))}
                             />
                         </Button.Group>
                     </Grid.Column>

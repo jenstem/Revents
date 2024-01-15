@@ -6,7 +6,8 @@ export default function RequireAuth() {
     const location = useLocation();
 
     if (!authenticated && initialised) {
-        return <Navigate to='/unauthorized' replace state={{ from: location }} />
+        // changed to unauthorised
+        return <Navigate to='/unauthorised' replace state={{from: location}} />
     }
 
     return (

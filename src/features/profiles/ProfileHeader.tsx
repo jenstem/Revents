@@ -15,9 +15,9 @@ type Props = {
 }
 
 export default function ProfileHeader({ profile }: Props) {
-    const dispatch = useAppDispatch();
-    const [loading, setLoading] = useState(false);
     const { currentUser } = useAppSelector(state => state.auth);
+    const [loading, setLoading] = useState(false);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         const docRef = doc(db, `profiles/${profile.id}/followers/${auth.currentUser?.uid}`);

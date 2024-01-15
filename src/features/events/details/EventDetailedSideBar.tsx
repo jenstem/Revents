@@ -25,7 +25,7 @@ export default function EventDetailedSideBar({ event }: Props) {
                     {event.attendees.map(attendee => (
                         <Item style={{ position: 'relative' }} key={attendee.id}>
                             {event.hostUid === attendee.id && (
-                                <Label style={{ position: 'absolute' }} color="orange" ribbon="right" content="Host" >
+                                <Label style={{ position: 'absolute' }} color="orange" ribbon="right">
                                     Host
                                 </Label>
                             )}
