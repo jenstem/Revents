@@ -11,18 +11,15 @@ type Props = {
 
 export default function EventFilters({ setQuery }: Props) {
     const startDate = useRef(new Date());
-    const [filter, setFilter] = useState('all');
     const { currentUser } = useAppSelector(state => state.auth);
+    const [filter, setFilter] = useState('all');
     const { status } = useAppSelector(state => state.events);
 
     function handleSetFilter(filter: string) {
         let q: QueryOptions[];
         if (!currentUser?.uid) {
-            q = [
-                { attribute: 'date', operator: '>=', value: startDate.current }
-            ];
+            q = [{ attribute: 'date', operator: '>=', value: startDate.current }];
             setQuery(q);
-
         } else {
             switch (filter) {
                 case 'isGoing':
@@ -36,8 +33,8 @@ export default function EventFilters({ setQuery }: Props) {
                     q = [
                         { attribute: 'hostUid', operator: '==', value: currentUser.uid },
                         { attribute: 'date', operator: '>=', value: startDate.current }
-
                     ];
+                    break;
                 default:
                     q = [
                         { attribute: 'date', operator: '>=', value: startDate.current }
