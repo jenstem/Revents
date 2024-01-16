@@ -33,7 +33,7 @@ export default function PhotoUpload({profile, setEditMode}: Props) {
             allowMultiple={false}
             maxFiles={1}
             server={{
-                process: (_fieldName, file, metadata, load, error, progress) => {
+                process: (_fieldName, file, _metadata, load, error, progress) => {
                     const id = createId();
                     const storageRef = ref(storage, `${auth.currentUser?.uid}/user_images/${id}`);
                     const task = uploadBytesResumable(storageRef, file);
