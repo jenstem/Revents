@@ -30,7 +30,7 @@ export default function ProfilePhotos({ profile }: Props) {
     // Set main profile picture
     async function handleSetMain(photo: Photo) {
         await batchSetPhoto(photo.url);
-        await update(profile.id, {
+        await updateProfile(auth.currentUser!, {
             photoURL: photo.url
         });
         await updateProfile(auth.currentUser!, {
