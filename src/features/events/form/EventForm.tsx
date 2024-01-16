@@ -6,7 +6,7 @@ import { categoryOptions } from "./categoryOptions";
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
 import { AppEvent } from "../../../app/types/event";
-import { Timestamp, arrayUnion, updateDoc } from "firebase/firestore";
+import { Timestamp, arrayUnion } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
 import { useEffect } from "react";
