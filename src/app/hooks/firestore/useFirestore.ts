@@ -108,14 +108,9 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
 
     // create a document
     const create = async (data: T) => {
-        try {
             const ref = doc(collection(db, path));
             await setDoc(ref, data);
             return ref;
-        } catch (error: any) {
-            console.log(error);
-            toast.error(error.message);
-        }
     }
 
     // update a document

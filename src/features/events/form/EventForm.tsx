@@ -41,6 +41,7 @@ export default function EventForm() {
         })
     }
 
+    // create event function
     async function createEvent(data: FieldValues) {
         if (!currentUser) return;
         const ref = await create({
@@ -67,6 +68,7 @@ export default function EventForm() {
         toast.success(`Event has been ${event.isCancelled ? 'uncancelled' : 'cancelled'}`)
     }
 
+    // submit event function
     async function onSubmit(data: FieldValues) {
         try {
             if (event) {
@@ -82,7 +84,6 @@ export default function EventForm() {
         }
     }
 
-    // check to see if we're loading - firestore
     if (status === 'loading') return <LoadingComponent />
 
     return (
