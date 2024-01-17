@@ -8,6 +8,7 @@ import AccountPage from "../../features/auth/AccountPage";
 import ProfilePage from "../../features/profiles/ProfilePage";
 import RequireAuth from './RequireAuth';
 import UnauthComponent from "../layout/UnauthComponent";
+import MapsWrapper from "../common/Maps/MapsWrapper";
 
 export const router = createBrowserRouter([
     {
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
             },
             { path: '/events', element: <EventDashboard /> },
             { path: '/events/:id', element: <EventDetailedPage /> },
-            { path: '/scratch', element: <Scratch /> },
+            { path: '/scratch', element: <MapsWrapper><Scratch /></MapsWrapper> },
             { path: '/unauthorised', element: <UnauthComponent /> },
         ]
     }

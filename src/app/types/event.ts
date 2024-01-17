@@ -1,3 +1,5 @@
+import { LatLng } from "use-places-autocomplete"
+
 export type AppEvent = {
 
 id: string
@@ -15,6 +17,7 @@ attendees: Attendee[]
 attendeeIds: string[]
 isHost?: boolean
 isGoing?: boolean
+latLng?: LatLng
 }
 
 export type Attendee = {

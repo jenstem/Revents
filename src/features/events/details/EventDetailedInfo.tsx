@@ -1,13 +1,15 @@
 import { Button, Grid, Icon, Segment } from "semantic-ui-react";
 import { AppEvent } from "../../../app/types/event";
-// import format from date-fns
 import { format } from 'date-fns';
+import { useState } from 'react';
+import EventDetailedMap from "./EventDetailedMap";
 
 type Props = {
     event: AppEvent
 }
 
-export default function EventDetailedInfo({event}: Props) {
+export default function EventDetailedInfo({ event }: Props) {
+    const [mapOpen, setMapOpen] = useState(false);
     return (
         <Segment.Group>
             <Segment attached="top">
@@ -26,7 +28,6 @@ export default function EventDetailedInfo({event}: Props) {
                         <Icon name="calendar" size="large" color="teal" />
                     </Grid.Column>
                     <Grid.Column width={15}>
-                        {/* format date the same way in EventDetailedHeader.tsx */}
                         <span>{format(new Date(event.date), 'dd MMM yyyy, h:mm a')}</span>
                     </Grid.Column>
                 </Grid>
@@ -41,10 +42,20 @@ export default function EventDetailedInfo({event}: Props) {
                     </Grid.Column>
                     <Grid.Column width={4}>
                         {/* Google Maps */}
-                        <Button color="teal" size="tiny" content="Show Map" />
+                        {event.latLng &&
+                            <Button
+                                color="teal"
+                                size="tiny"
+                                content={mapOpen ? 'Hide map' : 'Show map'}
+                                onClick={() => setMapOpen(!mapOpen)}
+                            />
+                        }
                     </Grid.Column>
                 </Grid>
             </Segment>
+            {mapOpen && event.latLng && (
+                <EventDetailedMap latLng={event.latLng} />
+            )}
         </Segment.Group>
 
     )
