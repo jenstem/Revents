@@ -10,7 +10,7 @@ export async function batchFollowToggle(profile: Profile, follow: boolean) {
     if (!currentUser) throw Error('Must be logged in to do this');
 
 
-    const followsRef = collection(db, `profiles/${profile.id}/follows`);
+    const followsRef = collection(db, `profiles/${profile.id}/followers`);
     const followerProfileRef = doc(db, `profiles/${currentUser.uid}`);
 
     const followingRef = collection(db, `profiles/${currentUser.uid}/following`);
@@ -70,7 +70,7 @@ export async function batchSetPhoto(photoURL: string) {
             batch.update(eventDoc.ref, {
                 attendees: eventDoc.data().attendees.filter((attendee: Attendee) => {
                     if (attendee.id === currentUser?.uid) {
-                        attendee.photoURL = photoURL;
+                        attendee.photoURL = photoURL
                     }
                     return attendee
                 })
