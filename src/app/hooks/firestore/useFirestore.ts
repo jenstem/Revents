@@ -9,13 +9,14 @@ import { getQuery } from './getQuery';
 
 type ListenerState = {
     name?: string
-    unsubscribe?: () => void
+    unsubscribe: () => void
 }
 
 export const useFireStore = <T extends DocumentData>(path: string) => {
     const listenersRef = useRef<ListenerState[]>([]);
     const lastDocRef = useRef<QueryDocumentSnapshot | null>(null);
     const hasMore = useRef(true);
+    const ignore = useRef(false);
 
     useEffect(() => {
         let listenerRefValue: ListenerState[] | null = null;
@@ -28,13 +29,13 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
             if (listenerRefValue) {
                 listenerRefValue.forEach(listener => {
                     // this is AI's line of code
-                    if (listener.unsubscribe) {
+                    // if (listener.unsubscribe) {
                         listener.unsubscribe();
-                    }
+                    // }
                 })
             }
         }
-    }, []);
+    }, [])
 
     const dispatch = useAppDispatch();
 
@@ -140,9 +141,9 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
             return await setDoc(doc(db, path, id), data);
         } catch (error: any) {
             console.log(error);
-            toast.error(error.message);
+            toast.error(error.message)
         }
     }
 
-    return { loadCollection, loadDocument, create, update, remove, set, hasMore }
+    return { loadCollection, loadDocument, create, update, remove, set, hasMore, ignore }
 }

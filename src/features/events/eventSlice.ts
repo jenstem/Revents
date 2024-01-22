@@ -32,7 +32,7 @@ export const eventSlice = createGenericSlice({
                         ...e,
                         date: (e.date as Timestamp).toDate().toISOString(),
                         isHost: auth.currentUser?.uid === e.hostUid,
-                        isGoing: e.attendeeIds.includes(auth.currentUser?.uid),
+                        is: e.attendeeIds.includes(auth.currentUser?.uid),
                     }
                 });
                 return { payload: mapped }
