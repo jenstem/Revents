@@ -7,7 +7,7 @@ import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
-import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
+// import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
 
 
 declare global {
@@ -26,16 +26,17 @@ const firebaseConfig = {
     appId: "1:549915020665:web:1ae9afa7c92e2a7ce073a8"
 };
 
-if (import.meta.env.DEV) {
-    self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-}
+// if (import.meta.env.DEV) {
+//     self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+// }
 
 const app = initializeApp(firebaseConfig);
 
-initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider('6LcP5FIpAAAAAEthxx9Hz9vqndieYuxSVM8GSoCJ'),
-    isTokenAutoRefreshEnabled: true
-})
+
+// initializeAppCheck(app, {
+//     provider: new ReCaptchaV3Provider('6LcP5FIpAAAAAEthxx9Hz9vqndieYuxSVM8GSoCJ'),
+//     isTokenAutoRefreshEnabled: true
+// })
 
 export const db = getFirestore(app);
 export const auth = getAuth(app);
