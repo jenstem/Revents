@@ -1,7 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { GenericState, createGenericSlice } from "../../app/store/genericSlice";
 import { Profile } from "../../app/types/profile";
-import { Timestamp } from "firebase/firestore";
+// import { Timestamp } from "firebase/firestore";
 
 
 type State = {
@@ -32,7 +32,7 @@ export const profileSlice = createGenericSlice({
                 const mapped = profileArray.map(profile => {
                     return {
                         ...profile,
-                        createdAt: (profile.createdAt as unknown as Timestamp).toDate().toISOString()
+                        // createdAt: (profile.createdAt as unknown as Timestamp).toDate().toISOString()
                     }
                 });
                 return {payload: mapped}
