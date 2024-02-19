@@ -34,6 +34,7 @@ export default function ProfileHeader({ profile }: Props) {
             await batchFollowToggle(profile, follow);
             dispatch(actions.setFollowing({ id: profile.id, isFollowing: follow }));
         } catch (error: any) {
+            console.error(error);
             toast.error(error.message);
         } finally {
             setLoading(false);

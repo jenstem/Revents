@@ -7,7 +7,7 @@ import FeedItem from './FeedItem';
 
 export default function NewsFeed() {
     const {currentUser} = useAppSelector(state => state.auth)
-    const {loadCollection} = useFireStore(`profiles/${currentUser?.uid}/newsfeed}`)
+    const {loadCollection} = useFireStore(`profiles/${currentUser?.uid}/newsfeed`)
     const{data, status} = useAppSelector(state => state.feed);
 
     useEffect (() => {

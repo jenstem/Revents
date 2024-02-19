@@ -2,7 +2,7 @@ import { Button, Divider, Form, Label } from "semantic-ui-react";
 import ModalWrapper from "../../app/common/modals/ModalWrapper";
 import { FieldValues, useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
-import { closeModal } from "../../app/common/modals/modalSlice";
+import { closeModal, setCredential, setResignedIn } from "../../app/common/modals/modalSlice";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../app/config/firebase";
 import SocialLogin from "./SocialLogin";
@@ -20,9 +20,10 @@ export default function LoginForm() {
     async function onSubmit(data: FieldValues) {
         try {
             await signInWithEmailAndPassword(auth, data.email, data.password);
+            dispatch(setResignedIn(true));
+            dispatch(setCredential(`${data.email}:${data.password}`));
             dispatch(closeModal());
             navigate(location.from);
-
         } catch (error: any) {
             setError('root.serverError', {
                 type: '400', message: error.message

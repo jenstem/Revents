@@ -26,11 +26,11 @@ export async function batchFollowToggle(profile: Profile, follow: boolean) {
 
         batch.set(doc(followsRef, currentUser.uid), {
             displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL,
+            photoURL: currentUser.photoURL ? currentUser.photoURL : ""
         })
         batch.set(doc(followingRef, profile.id), {
             displayName: profile.displayName,
-            photoURL: profile.photoURL,
+            photoURL: profile.photoURL ? currentUser.photoURL : ""
         })
     } else {
         batch.update(followerProfileRef, { followingCount: increment(-1) });
