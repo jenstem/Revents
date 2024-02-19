@@ -34,8 +34,8 @@ export default function AccountPage() {
     }, [])
 
     useEffect(() => {
-        console.log("resignedin changed: ", resignedin)
-        console.log("credentialchanged: ", credential)
+        // console.log("resignedin changed: ", resignedin)
+        // console.log("credentialchanged: ", credential)
         if (credential !== "") {
             setCurrentCred(EmailAuthProvider.credential(credential.split(':')[0], credential.split(':')[1]))
         }

@@ -14,7 +14,6 @@ export const helloWorld = onRequest((request, response) => {
 });
 
 export const eventWritten = onDocumentWritten("events/{docId}", async (event) => {
-    // logger.info = console.log
     logger.info("===EVENT WRITTEN START===");
     const beforeData = event.data?.before.data() as AppEvent;
     const afterData = event.data?.after.data() as AppEvent;
