@@ -28,7 +28,6 @@ export default function SocialLogin() {
         try {
             if (provider) {
                 const result = await signInWithPopup(auth, provider);
-                console.log(result);
                 if (result.user.metadata.creationTime === result.user.metadata.lastSignInTime) {
                     await set(result.user.uid, {
                         displayName: result.user.displayName,

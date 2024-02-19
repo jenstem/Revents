@@ -74,14 +74,12 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
                     processQuery(querySnapshot);
                 })
         } else {
-            // console.log("path is", path);
             const listener = onSnapshot(query, {
                 next: querySnapshot => {
                     processQuery(querySnapshot);
                 },
                 error: error => {
                     dispatch(actions.error(error.message));
-                    // console.error("Full error:", error);
                     console.log('Collection error:', error.message);
                 }
             })
