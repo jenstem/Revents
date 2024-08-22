@@ -11,7 +11,6 @@ import 'react-toastify/dist/ReactToastify.css'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
       <Provider store={store}>
-        // toast library for errors
         <ToastContainer position='bottom-right' hideProgressBar theme='colored'/>
       <RouterProvider router={router} />
       </Provider>
