@@ -79,7 +79,7 @@ This app is meant to help the user quickly and easily add/update/remove/sign-up 
 ## Screenshots:
 
 ![](https://github.com/jenstem/Revents/blob/main/revents-screenshot.png) <br>
-*This is a screenshot of the sign-up/login page*
+*This is a screenshot of an event's page with Google Maps*
 ##
 
 <a id='contact'></a>
